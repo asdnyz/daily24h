@@ -2,34 +2,26 @@ import os
 from google import genai
 from google.genai import types
 
-# 1. Initialize the Gemini Client
-# Make sure you have GEMINI_API_KEY in your GitHub Secrets!
+# Initialize the Gemini Client
 client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
 
-def fetch_and_summarize_news(topic="Artificial Intelligence"):
+def fetch_and_summarize_news(topic="Global Tech & AI News"):
     print(f"🔎 Searching for news about: {topic}...")
     
-    prompt = f"""
-    Find the top 5 most important news stories from the last 24 hours regarding {topic}.
-    For each story:
-    - Provide a catchy headline.
-    - Give a 2-sentence summary of why it matters.
-    - Include the source link.
-    Format the output as a clean daily briefing.
-    """
+    prompt = f"Summarize the top 5 news stories from the last 24 hours about {topic} with sources."
 
-    # 2. Call Gemini with Google Search Grounding enabled
+    # Use the corrected tool name 'GoogleSearch' and model 'gemini-1.5-flash'
     response = client.models.generate_content(
-        model="gemini-2.0-flash",
+        model="gemini-1.5-flash", 
         contents=prompt,
         config=types.GenerateContentConfig(
-            tools=[types.Tool(google_search=types.GoogleSearchRetrieval())]
+            tools=[types.Tool(google_search=types.GoogleSearch())]
         )
     )
 
     return response.text
 
 if __name__ == "__main__":
-    briefing = fetch_and_summarize_news("Global Tech & AI News")
+    briefing = fetch_and_summarize_news()
     print("\n--- DAILY BRIEFING ---\n")
     print(briefing)
