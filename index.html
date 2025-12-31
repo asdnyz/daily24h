@@ -3,9 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>N.I.U.S. | Ultimate Source</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <title>N.I.U.S. | Terminal</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;800;900&display=swap" rel="stylesheet">
     <style>
         :root { 
@@ -16,15 +14,12 @@
             --bg: #000000; --card: #1c1c1e; --text: #ffffff; 
             --sub: #86868b; --border: rgba(255,255,255,0.1); 
         }
-        
         body { 
-            font-family: 'Inter', -apple-system, sans-serif; 
-            background: var(--bg); color: var(--text); margin: 0; 
-            -webkit-font-smoothing: antialiased; 
-            letter-spacing: -0.01em;
+            font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); margin: 0; 
+            -webkit-font-smoothing: antialiased; letter-spacing: -0.01em; overflow-x: hidden;
         }
 
-        /* Unified Static Nav */
+        /* Navigation */
         .nav { 
             position: fixed; top: 0; left: 0; right: 0; height: var(--nav-h);
             display: flex; align-items: center; justify-content: space-between;
@@ -33,63 +28,49 @@
             backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
         }
         
-        .logo-container { display: flex; align-items: center; gap: 12px; }
-
-        .nav-center { 
-            position: absolute; left: 50%; transform: translateX(-50%);
-            white-space: nowrap;
-        }
-
-        /* Typography Matching */
-        .logo-main, .logo-sub { 
-            font-weight: 900; 
-            font-size: 20px; 
-            letter-spacing: -0.05em; 
-            display: flex; 
-            align-items: center; 
-            gap: 8px; 
-        }
-        .logo-main { text-transform: uppercase; }
-        .logo-sub { opacity: 0.4; }
+        .logo-main { font-weight: 900; font-size: 20px; letter-spacing: -0.05em; display: flex; align-items: center; gap: 8px; }
+        .nav-center { position: absolute; left: 50%; transform: translateX(-50%); white-space: nowrap; }
+        .logo-sub { font-weight: 900; font-size: 14px; opacity: 0.4; letter-spacing: -0.02em; }
 
         /* Live Indicator */
         .pulse { width: 8px; height: 8px; background: #34c759; border-radius: 50%; animation: pulse 2s infinite; }
         @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(52, 199, 89, 0.7); } 70% { box-shadow: 0 0 0 10px rgba(52, 199, 89, 0); } 100% { box-shadow: 0 0 0 0 rgba(52, 199, 89, 0); } }
 
-        #theme-toggle { 
-            cursor: pointer; width: 42px; height: 42px; border-radius: 50%; 
-            border: none; background: var(--text); color: var(--bg); 
-            display: flex; align-items: center; justify-content: center; 
-        }
+        #theme-toggle { cursor: pointer; width: 42px; height: 42px; border-radius: 50%; border: none; background: var(--text); color: var(--bg); display: flex; align-items: center; justify-content: center; }
         .theme-icon { width: 18px; height: 18px; }
         body.dark .sun, body:not(.dark) .moon { display: none; }
         
-        .container { max-width: 900px; margin: 120px auto 100px; padding: 0 40px; display: grid; gap: 60px; }
+        .container { max-width: 900px; margin: 120px auto 80px; padding: 0 40px; display: grid; gap: 60px; }
         
-        /* G3 Squircle */
+        /* G3 Squircle Layout */
         .squircle { border-radius: 42px; background: var(--card); border: 1px solid var(--border); padding: 45px; }
-        
-        .news-card h3 { font-size: 34px; margin: 0 0 32px 0; font-weight: 800; line-height: 1.15; letter-spacing: -0.05em; }
+        .news-card h3 { font-size: 34px; margin: 0 0 32px; font-weight: 800; line-height: 1.15; letter-spacing: -0.04em; }
         .news-card h3 a { color: inherit; text-decoration: none; display: flex; align-items: center; gap: 14px; }
         .link-icon { width: 24px; height: 24px; opacity: 0.2; }
-        
         .content-section { border-top: 1px solid var(--border); padding-top: 32px; }
         .news-card ul { margin: 0; padding-left: 20px; color: var(--sub); list-style-type: square; }
-        .news-card li { font-size: 19px; line-height: 1.6; margin-bottom: 16px; font-weight: 400; }
+        .news-card li { font-size: 19px; line-height: 1.6; margin-bottom: 16px; }
         b { color: var(--text); font-weight: 700; }
+
+        /* MOBILE OPTIMIZATION */
+        @media (max-width: 768px) {
+            .nav { padding: 0 20px; }
+            .nav-center { display: none; }
+            .container { margin: 100px auto 40px; padding: 0 16px; gap: 24px; }
+            .squircle { border-radius: 28px; padding: 24px; }
+            .news-card h3 { font-size: 22px; margin-bottom: 20px; }
+            .news-card li { font-size: 15px; margin-bottom: 10px; }
+            .content-section { padding-top: 20px; }
+        }
         
-        .archive-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; margin-top: 40px; }
-        .archive-btn { border-radius: 12px; background: var(--card); padding: 16px; text-decoration: none; color: var(--text); font-weight: 600; text-align: center; border: 1px solid var(--border); font-size: 14px; transition: 0.2s; }
+        .archive-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 12px; margin-top: 40px; }
+        .archive-btn { border-radius: 12px; background: var(--card); padding: 14px; text-decoration: none; color: var(--text); font-weight: 600; text-align: center; border: 1px solid var(--border); font-size: 14px; }
     </style>
 </head>
 <body>
     <nav class="nav">
-        <div class="logo-container">
-            <span class="logo-main"><div class="pulse"></div> N.I.U.S.</span>
-        </div>
-        <div class="nav-center">
-            <span class="logo-sub">news.intelligence.ultimate.source.</span>
-        </div>
+        <div class="logo-main"><div class="pulse"></div> N.I.U.S.</div>
+        <div class="nav-center"><span class="logo-sub">news.intelligence.ultimate.source.</span></div>
         <button id="theme-toggle" onclick="toggleTheme()"><svg class="theme-icon sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"></path></svg><svg class="theme-icon moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path></svg></button>
     </nav>
 
@@ -134,10 +115,10 @@
         function toggleTheme() {
             const body = document.body;
             body.classList.toggle('dark');
-            localStorage.setItem('nius-absolute-v2', body.classList.contains('dark') ? 'dark' : 'light');
+            localStorage.setItem('nius-responsive-v1', body.classList.contains('dark') ? 'dark' : 'light');
         }
         window.onload = () => {
-            if (localStorage.getItem('nius-absolute-v2') === 'dark') document.body.classList.add('dark');
+            if (localStorage.getItem('nius-responsive-v1') === 'dark') document.body.classList.add('dark');
         };
     </script>
 </body>
