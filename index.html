@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nexus Intelligence Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root { --primary: #2563eb; --bg: #f8fafc; --card: #ffffff; --text: #1e293b; --sub: #64748b; }
+        * { box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); margin: 0; line-height: 1.6; }
+        .nav { background: #fff; border-bottom: 1px solid #e2e8f0; padding: 1rem 2rem; position: sticky; top: 0; z-index: 100; }
+        .nav-content { max-width: 1000px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-weight: 800; font-size: 1.5rem; color: #0f172a; letter-spacing: -0.03em; }
+        .status { display: flex; align-items: center; gap: 8px; font-size: 0.8rem; font-weight: 600; color: #22c55e; }
+        .dot { height: 8px; width: 8px; background: #22c55e; border-radius: 50%; animation: pulse 2s infinite; }
+        
+        .hero { max-width: 1000px; margin: 40px auto; padding: 0 20px; }
+        .hero h1 { font-size: 3rem; font-weight: 800; margin-bottom: 10px; color: #0f172a; letter-spacing: -0.04em; }
+        .hero p { color: var(--sub); font-size: 1.1rem; }
+
+        .grid { max-width: 1000px; margin: 0 auto 60px; padding: 0 20px; display: grid; gap: 24px; }
+        .news-card { background: var(--card); border: 1px solid #e2e8f0; border-radius: 16px; padding: 32px; transition: 0.3s; }
+        .news-card:hover { transform: translateY(-4px); box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); border-color: var(--primary); }
+        .news-card h3 { margin-top: 0; font-size: 1.4rem; }
+        .news-card h3 a { color: inherit; text-decoration: none; }
+        .news-card h3 a:hover { color: var(--primary); }
+        
+        .archive { background: #f1f5f9; padding: 60px 20px; }
+        .archive-inner { max-width: 1000px; margin: 0 auto; }
+        .archive-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; margin-top: 20px; }
+        .archive-link { background: #fff; padding: 15px; border-radius: 10px; text-decoration: none; color: var(--text); font-weight: 600; text-align: center; border: 1px solid #e2e8f0; transition: 0.2s; }
+        .archive-link:hover { background: var(--primary); color: #fff; }
+
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; } }
+        @media (max-width: 600px) { .hero h1 { font-size: 2rem; } }
+    </style>
+</head>
+<body>
+    <nav class="nav">
+        <div class="nav-content">
+            <div class="logo">NEXUS</div>
+            <div class="status"><span class="dot"></span> SYSTEM LIVE</div>
+        </div>
+    </nav>
+    <header class="hero">
+        <h1>Intelligence Briefing</h1>
+        <p>Real-time AI News Aggregator • Updated 2025-12-31 12:48 UTC</p>
+    </header>
+    <main class="grid">
+        <div class="news-card"><h3>Disney Partners with OpenAI for Generative AI Integration
+Disney has announced a significant strategic partnership with OpenAI, making it the first major content owner to license its intellectual property for Sora, OpenAI's generative AI video platform. This collaboration allows Sora to create short videos using Disney characters and elements from its franchises, with select fan-inspired videos to be streamed on Disney+.</div>
+<div class="news-card"><h3>China Accelerates AI Development with Over 700 Generative AI Products
+China has seen rapid growth in its artificial intelligence sector, with over 700 generative AI large model products completing official filing procedures. This surge reflects advancements in AI, integrated circuits, and software, contributing to the nation's technological independence amidst global chip restrictions.</div>
+<div class="news-card"><h3>Nvidia Faces Demand for AI Chips Amidst Chinese Restrictions
+Despite Beijing's encouragement for domestic chip production, Chinese tech giants are still seeking Nvidia's advanced AI chips. Nvidia's H20 model has regained export approval, and the company is developing a more powerful B30A chip, highlighting the ongoing tension between global demand and China's regulatory landscape.</div>
+<div class="news-card"><h3>Memory Chip Demand Surges, Propelling Kioxia Holdings to Top Stock Performance
+The escalating demand for memory chips, driven by the AI boom, has led to unprecedented stock gains for Japanese memory chipmaker Kioxia Holdings. This surge underscores the critical role of memory in AI infrastructure and data centers, with Kioxia's shares outperforming global and domestic benchmarks.</div>
+<div class="news-card"><h3>Meta Acquires AI Startup Manus to Enhance AI Offerings
+Meta has purchased artificial intelligence startup Manus, signaling its continued commitment to expanding its AI capabilities across its platforms. This acquisition is part of Meta's broader strategy to bolster its AI offerings and remain competitive in the rapidly evolving AI landscape.</div>
+
+    </main>
+    <section class="archive">
+        <div class="archive-inner">
+            <h2>Historical Archives</h2>
+            <div class="archive-grid">
+                <a class="archive-link" href="briefings/2025-12-31.md">2025-12-31</a>
+
+            </div>
+        </div>
+    </section>
+    <footer style="text-align: center; padding: 40px; color: var(--sub); font-size: 0.9rem;">
+        Engineered with Gemini 2.5 Flash-Lite & GitHub Actions
+    </footer>
+</body>
+</html>
