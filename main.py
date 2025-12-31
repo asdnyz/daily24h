@@ -87,7 +87,7 @@ def generate_index_html(latest_content):
         }}
         
         body {{ 
-            font-family: -apple-system, BlinkMacSystemFont, sans-serif; 
+            font-family: -apple-system, Helvetica, sans-serif; 
             background: var(--bg); color: var(--text); margin: 0; 
             transition: background 0.6s ease; -webkit-font-smoothing: antialiased; 
         }}
@@ -148,7 +148,7 @@ def generate_index_html(latest_content):
     </nav>
     <div class="hero">
         <h1>Nexus Intelligence.</h1>
-        <div style="font-size: 13px; font-weight: 700; color: #34c759; margin-top: 30px;">● NEURAL SYSTEM ACTIVE</div>
+        <div style="font-size: 13px; font-weight: 700; color: #34c759; margin-top: 30px;">AI NEWS AGGREGATOR ● ONLINE</div>
     </div>
     <main class="grid">{cards_html}</main>
     <section style="max-width: 900px; margin: 0 auto 120px; padding: 0 20px;">
