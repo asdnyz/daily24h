@@ -156,10 +156,10 @@ def generate_index_html(latest_content):
     </nav>
 
     <div class="hero">
-        <span class="hero-word" id="w1">nexus.</span>
-        <span class="hero-word" id="w2">intelligence.</span>
-        <span class="hero-word" id="w3">ultimate.</span>
-        <span class="hero-word" id="w4">source.</span>
+        <span class="hero-word" id="w1">Nexus.</span>
+        <span class="hero-word" id="w2">Intelligence.</span>
+        <span class="hero-word" id="w3">Ultimate.</span>
+        <span class="hero-word" id="w4">Source.</span>
     </div>
 
     <main class="grid">{cards_html}</main>
