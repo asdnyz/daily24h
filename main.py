@@ -2,7 +2,6 @@ import os
 import sys
 import glob
 import re
-import time
 from datetime import datetime
 from google import genai
 from google.genai import types
@@ -19,15 +18,12 @@ def get_latest_briefing_content():
     list_of_files = glob.glob('briefings/*.md')
     if not list_of_files: return None
     latest_file = max(list_of_files, key=os.path.getmtime)
-    print(f"🔄 Fallback recovery: {latest_file}")
     with open(latest_file, "r", encoding="utf-8") as f:
         return f.read()
 
 def generate_index_html(latest_content):
-    """Generates the NIUS Sequential Morph UI with high-end scroll logic."""
-    print("🍏 Building NIUS Sequential Morph UI...")
-    
-    current_date = datetime.now().strftime("%b %d, %Y").upper()
+    """Generates the NIUS Terminal UI with Emoji preservation and Unified Nav."""
+    print("🍏 Building NIUS Terminal UI...")
     
     sun_icon = '<svg class="theme-icon sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"></path></svg>'
     moon_icon = '<svg class="theme-icon moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path></svg>'
@@ -40,12 +36,15 @@ def generate_index_html(latest_content):
         lines = [l.strip() for l in story.split('\n') if l.strip()]
         if not lines: continue
         
-        # Parse Title and Link (Sanitize title)
+        # SMART TITLE PARSER: Preserves Emoji, Title, and Link
         title_line = lines[0].replace('### ', '').replace('**', '').strip()
-        title_text, url = title_line, "#"
-        if '[' in title_line and '](' in title_line:
-            title_text = title_line.split('[')[1].split(']')[0]
-            url = title_line.split('](')[1].split(')')[0]
+        
+        # Extract URL using regex to ensure the emoji stays with the title_text
+        url_match = re.search(r'\((https?://\S+)\)', title_line)
+        url = url_match.group(1) if url_match else "#"
+        
+        # Clean title_text of the Markdown link syntax [ ]( )
+        title_text = re.sub(r'\[|\]|\(https?://\S+\)', '', title_line).strip()
         
         # Convert Body Bolding (** -> <b>)
         items_html = ""
@@ -91,78 +90,73 @@ def generate_index_html(latest_content):
         }}
         
         body {{ 
-            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif; 
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Helvetica Neue", sans-serif; 
             background: var(--bg); color: var(--text); margin: 0; 
-            transition: background 0.4s ease; -webkit-font-smoothing: antialiased; 
-            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased; 
         }}
 
-        /* Navigation & Logo Sync */
+        /* Unified Static Nav */
         .nav {{ 
             position: fixed; top: 0; left: 0; right: 0; height: var(--nav-h);
             display: flex; align-items: center; justify-content: space-between;
-            padding: 0 40px; z-index: 2000; background: transparent; transition: 0.3s;
-        }}
-        .nav.scrolled {{
-            background: var(--bg); backdrop-filter: blur(30px) saturate(180%);
-            -webkit-backdrop-filter: blur(30px) saturate(180%);
+            padding: 0 40px; z-index: 2000;
+            background: var(--bg);
             border-bottom: 0.5px solid var(--border);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
         }}
         
-        .nav-date, .nav-logo {{ 
-            font-weight: 900; font-size: 22px; letter-spacing: -0.05em; 
-            opacity: 0; transition: 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-            transform: translateY(15px);
+        .nav-center {{ 
+            position: absolute; left: 50%; transform: translateX(-50%);
+            display: flex; align-items: center; gap: 12px;
+            white-space: nowrap;
         }}
-        .nav-logo {{ position: absolute; left: 50%; transform: translateX(-50%) translateY(15px); }}
-        .nav-date {{ font-size: 14px; letter-spacing: 0.05em; text-transform: uppercase; }}
 
-        .visible {{ opacity: 1 !important; transform: translateY(0) !important; }}
-        .visible-date {{ opacity: 0.4 !important; transform: translateY(0) !important; }}
+        .logo-main {{ font-weight: 900; font-size: 20px; letter-spacing: -0.05em; display: flex; align-items: center; gap: 8px; }}
+        .logo-sub {{ font-weight: 500; font-size: 14px; opacity: 0.4; letter-spacing: -0.02em; }}
+
+        /* Live Indicator */
+        .pulse {{ width: 8px; height: 8px; background: #34c759; border-radius: 50%; box-shadow: 0 0 0 rgba(52, 199, 89, 0.4); animation: pulse 2s infinite; }}
+        @keyframes pulse {{ 0% {{ box-shadow: 0 0 0 0 rgba(52, 199, 89, 0.7); }} 70% {{ box-shadow: 0 0 0 10px rgba(52, 199, 89, 0); }} 100% {{ box-shadow: 0 0 0 0 rgba(52, 199, 89, 0); }} }}
 
         #theme-toggle {{ 
-            cursor: pointer; width: 44px; height: 44px; border-radius: 50%; 
+            cursor: pointer; width: 42px; height: 42px; border-radius: 50%; 
             border: none; background: var(--text); color: var(--bg); 
             display: flex; align-items: center; justify-content: center; 
         }}
         .theme-icon {{ width: 18px; height: 18px; }}
         body.dark .sun, body:not(.dark) .moon {{ display: none; }}
         
-        /* Sequential Hero */
-        .hero {{ max-width: 900px; margin: 200px auto 100px; padding: 0 40px; }}
-        .hero-word {{ 
-            display: block; font-size: clamp(48px, 10vw, 110px); font-weight: 900; 
-            line-height: 0.85; letter-spacing: -0.07em; transition: 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-        }}
+        .container {{ max-width: 900px; margin: 120px auto 100px; padding: 0 40px; display: grid; gap: 60px; }}
         
-        .grid {{ max-width: 900px; margin: 0 auto; padding: 0 40px 100px; display: grid; gap: 60px; }}
+        /* G3 Squircle */
         .squircle {{ border-radius: 42px; background: var(--card); border: 1px solid var(--border); padding: 45px; }}
-        .news-card h3 {{ font-size: 36px; margin: 0 0 32px 0; font-weight: 800; line-height: 1.1; letter-spacing: -0.04em; }}
+        
+        .news-card h3 {{ font-size: 34px; margin: 0 0 32px 0; font-weight: 800; line-height: 1.15; letter-spacing: -0.04em; }}
         .news-card h3 a {{ color: inherit; text-decoration: none; display: flex; align-items: center; gap: 14px; }}
+        .link-icon {{ width: 24px; height: 24px; opacity: 0.2; }}
+        
         .content-section {{ border-top: 1px solid var(--border); padding-top: 32px; }}
         .news-card ul {{ margin: 0; padding-left: 20px; color: var(--sub); list-style-type: square; }}
-        .news-card li {{ font-size: 20px; line-height: 1.6; margin-bottom: 16px; }}
+        .news-card li {{ font-size: 19px; line-height: 1.6; margin-bottom: 16px; }}
         b {{ color: var(--text); font-weight: 700; }}
         
         .archive-grid {{ display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; margin-top: 40px; }}
         .archive-btn {{ border-radius: 12px; background: var(--card); padding: 16px; text-decoration: none; color: var(--text); font-weight: 600; text-align: center; border: 1px solid var(--border); font-size: 14px; transition: 0.2s; }}
+        .archive-btn:hover {{ background: var(--text); color: var(--bg); }}
     </style>
 </head>
 <body>
-    <nav id="navbar" class="nav">
-        <div id="date-display" class="nav-date">{current_date}</div>
-        <div id="logo-display" class="nav-logo">N.I.U.S.</div>
+    <nav class="nav">
+        <div class="nav-date" style="opacity:0">Placeholder</div>
+        <div class="nav-center">
+            <span class="logo-main"><div class="pulse"></div> N.I.U.S.</span>
+            <span class="logo-sub">News.Intelligence.Ultimate.Source.</span>
+        </div>
         <button id="theme-toggle" onclick="toggleTheme()">{sun_icon}{moon_icon}</button>
     </nav>
 
-    <div class="hero">
-        <span class="hero-word" id="w1">Nexus.</span>
-        <span class="hero-word" id="w2">Intelligence.</span>
-        <span class="hero-word" id="w3">Ultimate.</span>
-        <span class="hero-word" id="w4">Source.</span>
-    </div>
-
-    <main class="grid">{cards_html}</main>
+    <main class="container">{cards_html}</main>
 
     <section style="max-width: 900px; margin: 0 auto 120px; padding: 0 40px;">
         <h2 style="font-size: 24px; font-weight: 800;">Archive</h2>
@@ -170,44 +164,13 @@ def generate_index_html(latest_content):
     </section>
 
     <script>
-        window.addEventListener('scroll', () => {{
-            const navbar = document.getElementById('navbar');
-            const dateDisplay = document.getElementById('date-display');
-            const logoDisplay = document.getElementById('logo-display');
-            const words = [document.getElementById('w1'), document.getElementById('w2'), document.getElementById('w3'), document.getElementById('w4')];
-            const scrollPos = window.scrollY;
-
-            // Sequential Stagger
-            words.forEach((word, index) => {{
-                const trigger = 60 + (index * 70);
-                if (scrollPos > trigger) {{
-                    word.style.opacity = '0';
-                    word.style.transform = 'translateY(-40px)';
-                }} else {{
-                    word.style.opacity = '1';
-                    word.style.transform = 'translateY(0)';
-                }}
-            }});
-
-            // Nav Trigger
-            if (scrollPos > 320) {{
-                navbar.classList.add('scrolled');
-                dateDisplay.classList.add('visible-date');
-                logoDisplay.classList.add('visible');
-            }} else {{
-                navbar.classList.remove('scrolled');
-                dateDisplay.classList.remove('visible-date');
-                logoDisplay.classList.remove('visible');
-            }}
-        }});
-
         function toggleTheme() {{
             const body = document.body;
             body.classList.toggle('dark');
-            localStorage.setItem('nius-cinematic-v1', body.classList.contains('dark') ? 'dark' : 'light');
+            localStorage.setItem('nius-terminal-v2', body.classList.contains('dark') ? 'dark' : 'light');
         }}
         window.onload = () => {{
-            if (localStorage.getItem('nius-cinematic-v1') === 'dark') document.body.classList.add('dark');
+            if (localStorage.getItem('nius-terminal-v2') === 'dark') document.body.classList.add('dark');
         }};
     </script>
 </body>
@@ -215,10 +178,10 @@ def generate_index_html(latest_content):
 
     with open("index.html", "w", encoding="utf-8") as f:
         f.write(full_html)
-    print("✅ Build Complete: NIUS Cinematic.")
+    print("✅ Build Complete: NIUS Terminal (Fixed Emojis).")
 
 def fetch_and_save_news():
-    prompt = "Search for top 5 AI/Tech stories from last 24h. Use format: ### [Emoji] [Title] (URL) \\n - bullet point with **bold keywords** \\n --- \\n USE EMOJIS. NO TL;DR LABEL."
+    prompt = "Search for top 5 AI/Tech stories from last 24h. Use format: ### [Emoji] [Title](URL) \\n - bullet point with **bold keywords** \\n --- \\n YOU MUST INCLUDE AN EMOJI."
     try:
         response = client.models.generate_content(
             model="gemini-2.0-flash-lite", 
@@ -232,7 +195,7 @@ def fetch_and_save_news():
                 f.write(response.text)
             generate_index_html(response.text)
     except Exception as e:
-        print(f"⚠️ Error: {e}")
+        print(f"⚠️ API Error: {e}")
         fallback = get_latest_briefing_content()
         if fallback: generate_index_html(fallback)
 
