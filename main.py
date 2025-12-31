@@ -57,19 +57,53 @@ def generate_index_html(latest_content):
                 date_val = f.replace(".md", "")
                 archive_links += f'<a class="archive-btn" href="briefings/{f}">{date_val}</a>'
 
+    def generate_index_html(latest_content):
+    """Generates the standalone HTML Dashboard with a dynamic logo color."""
+    
+    # ... (link_icon and story parsing logic remains the same) ...
+
     full_html = f"""<!DOCTYPE html>
 <html lang="en" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nexus Intelligence Dashboard</title>
+    <title>Nexus Intelligence</title>
     <style>
-        :root {{ --bg: #f8fafc; --card: #ffffff; --text: #1e293b; --sub: #64748b; --accent: #2563eb; --border: #e2e8f0; }}
-        [data-theme="dark"] {{ --bg: #0f172a; --card: #1e293b; --text: #f1f5f9; --sub: #94a3b8; --border: #334155; }}
+        :root {{ 
+            --bg: #f8fafc; 
+            --card: #ffffff; 
+            --text: #1e293b; 
+            --sub: #64748b; 
+            --accent: #2563eb; 
+            --border: #e2e8f0;
+            --logo-color: #2563eb; /* Blue in Light Mode */
+        }}
+        [data-theme="dark"] {{ 
+            --bg: #0f172a; 
+            --card: #1e293b; 
+            --text: #f1f5f9; 
+            --sub: #94a3b8; 
+            --border: #334155;
+            --logo-color: #60a5fa; /* Light Blue/Cyan in Dark Mode */
+        }}
+        
         body {{ font-family: -apple-system, system-ui, sans-serif; background: var(--bg); color: var(--text); margin: 0; transition: 0.3s; line-height: 1.5; }}
+        
         .nav {{ background: var(--card); border-bottom: 1px solid var(--border); padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; }}
-        .logo {{ font-weight: 800; font-size: 1.2rem; letter-spacing: -0.04em; color: var(--accent); }}
-        #theme-toggle {{ cursor: pointer; padding: 8px 16px; border-radius: 20px; border: 1px solid var(--border); background: var(--bg); color: var(--text); font-size: 0.75rem; font-weight: 700; }}
+        
+        /* Updated Logo Class */
+        .logo {{ 
+            font-weight: 800; 
+            font-size: 1.2rem; 
+            letter-spacing: -0.04em; 
+            color: var(--logo-color); /* Uses the dynamic variable */
+            transition: color 0.3s ease; 
+        }}
+        
+        #theme-toggle {{ cursor: pointer; padding: 8px 16px; border-radius: 20px; border: 1px solid var(--border); background: var(--bg); color: var(--text); font-size: 0.75rem; font-weight: 700; transition: 0.2s; }}
+        
+        /* ... (rest of the CSS: .hero, .news-card, etc.) ... */
+        
         .hero {{ max-width: 800px; margin: 50px auto 30px; padding: 0 20px; }}
         .status {{ display: flex; align-items: center; gap: 8px; font-size: 0.75rem; font-weight: 800; color: #22c55e; margin-bottom: 10px; }}
         .dot {{ height: 8px; width: 8px; background: #22c55e; border-radius: 50%; animation: pulse 2s infinite; }}
@@ -89,6 +123,7 @@ def generate_index_html(latest_content):
         .archive-btn:hover {{ background: var(--accent); color: #fff; }}
         @keyframes pulse {{ 0% {{ opacity: 1; }} 50% {{ opacity: 0.4; }} 100% {{ opacity: 1; }} }}
     </style>
+    
     <script>
         function toggleTheme() {{
             const html = document.documentElement;
@@ -109,21 +144,7 @@ def generate_index_html(latest_content):
         <div class="logo">NEXUS INTELLIGENCE</div>
         <button id="theme-toggle" onclick="toggleTheme()">🌙 DARK</button>
     </nav>
-    <div class="hero">
-        <div class="status"><span class="dot"></span> LIVE SYSTEM</div>
-        <h1 style="margin:0; font-size:2.8rem; letter-spacing:-0.05em; font-weight:800;">Global Intelligence</h1>
-        <p style="color:var(--sub); margin-top:5px;">AI News Hub • Updated {datetime.now().strftime("%Y-%m-%d %H:%M")} UTC</p>
-    </div>
-    <main class="grid">{cards_html}</main>
-    <div style="max-width:800px; margin:60px auto; padding:0 20px;">
-        <h3 style="margin:0">📚 Archive</h3>
-        <div class="archive-grid">{archive_links}</div>
-    </div>
-    <footer style="text-align:center; padding:40px; color:var(--sub); font-size:0.8rem;">
-        Gemini 2.5 Flash-Lite & Google Search Grounding
-    </footer>
-</body>
-</html>"""
+    """
     with open("index.html", "w", encoding="utf-8") as f:
         f.write(full_html)
 
