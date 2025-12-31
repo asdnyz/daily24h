@@ -7,18 +7,17 @@ from google.genai import types
 client = genai.Client(api_key=os.environ.get("GEMINI_API_KEY"))
 
 def generate_index_html(latest_content):
-    """Generates a standalone HTML Dashboard with forced CSS specificity."""
-    print("💎 Rebuilding Dashboard with high-specificity CSS...")
+    """Generates a high-end dashboard using G3 squircle geometry and Apple design language."""
+    print("🍏 Applying G3 Squircle geometry and Cupertino styling...")
     
-    link_icon = '<svg class="link-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>'
+    link_icon = '<svg class="link-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>'
 
+    # Card Parsing Logic
     raw_stories = [s.strip() for s in latest_content.split('---') if s.strip()]
     cards_html = ""
-    
     for story in raw_stories:
         lines = [l.strip() for l in story.split('\n') if l.strip()]
         if not lines: continue
-        
         title_line = lines[0].replace('### ', '').strip()
         title_text = title_line
         url = "#"
@@ -27,146 +26,161 @@ def generate_index_html(latest_content):
                 title_text = title_line.split('[')[1].split(']')[0]
                 url = title_line.split('](')[1].split(')')[0]
             except: pass
-        
         body_text = " ".join(lines[1:]).replace('**Summary**:', '').replace('Summary:', '').strip()
-        badge_class = "pos" if any(w in body_text.lower() for w in ["growth", "new", "advance", "launch"]) else "neg"
-        badge_text = "Growth" if badge_class == "pos" else "Update"
+        
+        is_growth = any(w in body_text.lower() for w in ["growth", "new", "advance", "launch"])
+        badge_style = "badge-growth" if is_growth else "badge-update"
+        badge_text = "Trending" if is_growth else "Briefing"
 
         cards_html += f"""
-        <div class="news-card">
-            <span class="sentiment-badge {badge_class}">{badge_text}</span>
+        <div class="news-card squircle">
+            <span class="status-pill {badge_style}">{badge_text}</span>
             <h3><a href="{url}" target="_blank">{title_text} {link_icon}</a></h3>
             <p>{body_text}</p>
         </div>"""
 
+    # Archive Grid
     archive_links = ""
     if os.path.exists("briefings"):
         files = sorted(os.listdir("briefings"), reverse=True)
         for f in files[:8]:
             if f.endswith(".md"):
                 date_val = f.replace(".md", "")
-                archive_links += f'<a class="archive-btn" href="briefings/{f}">{date_val}</a>'
+                archive_links += f'<a class="archive-btn squircle-sm" href="briefings/{f}">{date_val}</a>'
 
     full_html = f"""<!DOCTYPE html>
-<html lang="en" data-theme="light">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nexus Intelligence Dashboard</title>
     <style>
-        /* 1. DEFINE VARIABLES */
         :root {{ 
-            --bg: #f8fafc; --card: #ffffff; --text: #1e293b; --sub: #64748b; 
-            --accent: #2563eb; --border: #e2e8f0; 
-            --logo-color: #2563eb; /* Default Blue */
+            --bg: #f5f5f7; --card: rgba(255, 255, 255, 0.7); --text: #1d1d1f; 
+            --sub: #86868b; --border: rgba(0,0,0,0.08); --accent: #0071e3; 
         }}
-
-        /* 2. DARK MODE OVERRIDES */
-        html[data-theme="dark"] {{ 
-            --bg: #0f172a; --card: #1e293b; --text: #f1f5f9; --sub: #94a3b8; 
-            --border: #334155; 
-            --logo-color: #ffffff !important; /* Force White */
-            --accent: #60a5fa;
+        body.dark {{ 
+            --bg: #000000; --card: rgba(28, 28, 30, 0.7); --text: #f5f5f7; 
+            --sub: #86868b; --border: rgba(255,255,255,0.12); --accent: #0a84ff; 
         }}
         
         body {{ 
-            font-family: -apple-system, system-ui, sans-serif; 
-            background: var(--bg); 
-            color: var(--text); 
-            margin: 0; 
-            transition: background 0.3s, color 0.3s; 
-            line-height: 1.5; 
+            font-family: -apple-system, "SF Pro Display", sans-serif;
+            background: var(--bg); color: var(--text); margin: 0; transition: background 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+            line-height: 1.4; letter-spacing: -0.02em; -webkit-font-smoothing: antialiased;
         }}
 
+        /* G3 Continuity Navigation */
         .nav {{ 
-            background: var(--card); 
-            border-bottom: 1px solid var(--border); 
-            padding: 1rem 2rem; 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            position: sticky; 
-            top: 0; 
-            z-index: 100; 
-            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+            background: var(--card); backdrop-filter: blur(30px) saturate(180%);
+            -webkit-backdrop-filter: blur(30px) saturate(180%);
+            border-bottom: 0.5px solid var(--border); padding: 0 30px; 
+            display: flex; justify-content: space-between; align-items: center; 
+            height: 52px; position: sticky; top: 0; z-index: 1000;
         }}
         
-        /* 3. THE LOGO - NO HARDCODED COLOR HERE */
-        .logo {{ 
-            font-weight: 800; 
-            font-size: 1.2rem; 
-            letter-spacing: -0.04em; 
-            color: var(--logo-color); 
-            transition: color 0.3s ease; 
-        }}
+        .logo {{ font-weight: 700; font-size: 20px; letter-spacing: -0.03em; transition: 0.4s; }}
         
         #theme-toggle {{ 
-            cursor: pointer; padding: 8px 16px; border-radius: 20px; 
-            border: 1px solid var(--border); background: var(--bg); 
-            color: var(--text); font-size: 0.75rem; font-weight: 700; 
+            cursor: pointer; padding: 6px 16px; border-radius: 980px; 
+            border: none; background: var(--text); color: var(--bg); 
+            font-size: 12px; font-weight: 600; transition: all 0.3s;
         }}
-        
-        .hero {{ max-width: 800px; margin: 50px auto 30px; padding: 0 20px; }}
-        .status {{ display: flex; align-items: center; gap: 8px; font-size: 0.75rem; font-weight: 800; color: #22c55e; margin-bottom: 10px; }}
-        .dot {{ height: 8px; width: 8px; background: #22c55e; border-radius: 50%; animation: pulse 2s infinite; }}
-        
-        .grid {{ max-width: 800px; margin: 0 auto; padding: 0 20px 80px; display: grid; gap: 20px; }}
-        .news-card {{ background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 28px; transition: 0.3s; }}
-        .news-card:hover {{ transform: translateY(-4px); box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); border-color: var(--accent); }}
-        .news-card h3 {{ margin: 12px 0; font-size: 1.4rem; font-weight: 700; }}
-        .news-card h3 a {{ color: inherit; text-decoration: none; display: flex; align-items: center; gap: 10px; }}
-        .link-icon {{ height: 18px; width: 18px; opacity: 0.3; }}
-        .news-card p {{ font-size: 1.05rem; color: var(--sub); margin: 0; }}
-        
-        .sentiment-badge {{ font-size: 0.65rem; font-weight: 900; padding: 4px 12px; border-radius: 20px; text-transform: uppercase; }}
-        .pos {{ background: #dcfce7; color: #166534; }}
-        .neg {{ background: #f1f5f9; color: #475569; }}
-        
-        .archive-grid {{ display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 10px; margin-top: 20px; }}
-        .archive-btn {{ background: var(--card); border: 1px solid var(--border); padding: 12px; border-radius: 10px; text-decoration: none; color: var(--text); text-align: center; font-size: 0.8rem; font-weight: 600; }}
-        
-        @keyframes pulse {{ 0% {{ opacity: 1; }} 50% {{ opacity: 0.4; }} 100% {{ opacity: 1; }} }}
-    </style>
-    <script>
-        function toggleTheme() {{
-            const html = document.documentElement;
-            const current = html.getAttribute('data-theme');
-            const next = current === 'dark' ? 'light' : 'dark';
-            
-            html.setAttribute('data-theme', next);
-            localStorage.setItem('theme', next);
-            document.getElementById('theme-toggle').innerText = next === 'dark' ? '☀️ LIGHT' : '🌙 DARK';
-            console.log('Theme changed to:', next);
-        }}
+        #theme-toggle:hover {{ transform: scale(1.05); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }}
 
-        window.onload = () => {{
-            const saved = localStorage.getItem('theme') || 'light';
-            document.documentElement.setAttribute('data-theme', saved);
-            document.getElementById('theme-toggle').innerText = saved === 'dark' ? '☀️ LIGHT' : '🌙 DARK';
-        }};
-    </script>
+        .hero {{ max-width: 900px; margin: 90px auto 50px; padding: 0 20px; text-align: center; }}
+        .hero h1 {{ font-size: 64px; font-weight: 800; letter-spacing: -0.04em; margin: 0; line-height: 1.1; }}
+        .hero p {{ font-size: 24px; color: var(--sub); margin: 15px 0; font-weight: 500; }}
+
+        /* The Squircle Grid */
+        .grid {{ max-width: 900px; margin: 0 auto; padding: 0 20px 100px; display: grid; gap: 32px; }}
+        
+        /* G3 Curve Emulation */
+        .squircle {{ 
+            border-radius: 42px; /* Large radius for squircle look */
+            background: var(--card); border: 1px solid var(--border);
+            padding: 40px; transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.03);
+        }}
+        .squircle:hover {{ transform: scale(1.02) translateY(-5px); box-shadow: 0 30px 60px rgba(0,0,0,0.1); border-color: var(--accent); }}
+        
+        .news-card h3 {{ font-size: 28px; margin: 18px 0; font-weight: 700; letter-spacing: -0.03em; }}
+        .news-card h3 a {{ color: inherit; text-decoration: none; display: inline-flex; align-items: center; gap: 14px; }}
+        .link-icon {{ width: 22px; height: 22px; opacity: 0.3; transition: 0.3s; }}
+        .news-card h3 a:hover .link-icon {{ opacity: 1; transform: translate(3px, -3px); color: var(--accent); }}
+        .news-card p {{ font-size: 18px; color: var(--sub); line-height: 1.5; font-weight: 400; }}
+
+        /* Status Pills */
+        .status-pill {{ 
+            font-size: 11px; font-weight: 700; padding: 5px 14px; border-radius: 980px; 
+            text-transform: uppercase; letter-spacing: 0.05em; display: inline-block;
+        }}
+        .badge-growth {{ background: #34c759; color: white; }}
+        .badge-update {{ background: var(--accent); color: white; }}
+
+        .archive-grid {{ display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 16px; margin-top: 40px; }}
+        .squircle-sm {{ 
+            border-radius: 18px; background: var(--card); padding: 20px; 
+            text-decoration: none; color: var(--text); font-weight: 600; text-align: center;
+            border: 1px solid var(--border); transition: 0.4s;
+        }}
+        .squircle-sm:hover {{ background: var(--accent); color: white; border-color: var(--accent); transform: translateY(-3px); }}
+
+        @media (max-width: 768px) {{
+            .hero h1 {{ font-size: 42px; }}
+            .squircle {{ border-radius: 32px; padding: 30px; }}
+        }}
+    </style>
 </head>
 <body>
     <nav class="nav">
-        <div class="logo">NEXUS INTELLIGENCE</div>
-        <button id="theme-toggle" onclick="toggleTheme()">🌙 DARK</button>
+        <div id="main-logo" class="logo">Nexus Intelligence</div>
+        <button id="theme-toggle" onclick="toggleTheme()">Dark Mode</button>
     </nav>
     <div class="hero">
-        <div class="status"><span class="dot"></span> LIVE SYSTEM</div>
-        <h1 style="margin:0; font-size:2.8rem; letter-spacing:-0.05em; font-weight:800;">Global Intelligence</h1>
-        <p style="color:var(--sub); margin-top:5px;">AI News Feed • Updated {datetime.now().strftime("%Y-%m-%d %H:%M")} UTC</p>
+        <h1>Global Intelligence.</h1>
+        <p>Grounded data. Verified by AI.</p>
+        <div style="font-size: 12px; font-weight: 700; color: #34c759; margin-top: 25px; letter-spacing: 0.1em;">
+            <span style="animation: pulse 2s infinite;">●</span> LIVE UPDATES • {datetime.now().strftime("%H:%M")} UTC
+        </div>
     </div>
     <main class="grid">{cards_html}</main>
-    <div style="max-width:800px; margin:60px auto; padding:0 20px;">
-        <h3 style="margin:0">📚 Archive</h3>
+    <section style="max-width: 900px; margin: 0 auto 100px; padding: 0 20px;">
+        <h2 style="font-size: 32px; font-weight: 700; letter-spacing: -0.03em;">Archive.</h2>
         <div class="archive-grid">{archive_links}</div>
-    </div>
-    <footer style="text-align:center; padding:40px; color:var(--sub); font-size:0.8rem;">
-        Gemini 2.0 Flash-Lite & Google Search Grounding
-    </footer>
+    </section>
+
+    <script>
+        function updateLogo(theme) {{
+            const logo = document.getElementById('main-logo');
+            if (theme === 'dark') {{
+                logo.style.setProperty('color', '#ffffff', 'important');
+            }} else {{
+                logo.style.setProperty('color', '#000000', 'important');
+            }}
+        }}
+
+        function toggleTheme() {{
+            const body = document.body;
+            body.classList.toggle('dark');
+            const isDark = body.classList.contains('dark');
+            const theme = isDark ? 'dark' : 'light';
+            localStorage.setItem('nexus-theme-v2', theme);
+            document.getElementById('theme-toggle').innerText = isDark ? 'Light Mode' : 'Dark Mode';
+            updateLogo(theme);
+        }}
+
+        window.onload = () => {{
+            const savedTheme = localStorage.getItem('nexus-theme-v2') || 'light';
+            if (savedTheme === 'dark') {{
+                document.body.classList.add('dark');
+                document.getElementById('theme-toggle').innerText = 'Light Mode';
+            }}
+            updateLogo(savedTheme);
+        }};
+    </script>
 </body>
 </html>"""
-    
     with open("index.html", "w", encoding="utf-8") as f:
         f.write(full_html)
 
@@ -184,6 +198,7 @@ def fetch_and_save_news():
             with open(f"briefings/{{dt}}.md", "w", encoding="utf-8") as f:
                 f.write(response.text)
             generate_index_html(response.text)
+            print("🍏 Dashboard updated with G3 Continuity styling.")
     except Exception as e: print(f"❌ Error: {{e}}")
 
 if __name__ == "__main__":
