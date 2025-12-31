@@ -140,7 +140,7 @@ def generate_index_html(latest_content):
         f.write(full_html)
 
 def fetch_and_save_news():
-    prompt = "Search for top 5 news stories from last 24h about Global Tech & AI. For each story, follow this EXACT format: ### [Title](URL) \\n Summary: content \\n --- "
+    prompt = "Search for top 5 news stories from last 24h about Global Tech & AI . For each story, follow this EXACT format: ### [Title](URL) \\n Summary: content \\n --- "
     try:
         response = client.models.generate_content(
             model="gemini-2.0-flash-lite", 
