@@ -1,8 +1,7 @@
 settings:
-  bot_name: "Nexus Intelligence Platform"
-  chart_theme: "dark"
+  bot_name: "Nexus Intelligence Dashboard"
 
 topics:
-  - id: "global_tech"
+  - id: "tech"
     label: "Global Tech & AI"
-    query: "top news in artificial intelligence, LLMs, and big tech companies"
+    query: "Artificial Intelligence and Technology"
