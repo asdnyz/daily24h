@@ -5,151 +5,74 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nexus Intelligence</title>
     <style>
-        :root { 
-            --bg: #f5f5f7; --card: #ffffff; --text: #1d1d1f; 
-            --sub: #515154; --border: rgba(0,0,0,0.08); --nav-h: 72px;
-            --accent: #34c759; --glow: rgba(0,0,0,0.02);
-        }
-        body.dark { 
-            --bg: #000000; --card: #1c1c1e; --text: #f5f5f7; 
-            --sub: #86868b; --border: rgba(255,255,255,0.1); 
-            --glow: rgba(255,255,255,0.02);
-        }
-        
-        body { 
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
-            background: var(--bg); color: var(--text); margin: 0; 
-            transition: background 0.4s ease; -webkit-font-smoothing: antialiased; 
-        }
-        
-        .nav { 
-            background: var(--bg); backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border-bottom: 0.5px solid var(--border); padding: 0 40px; 
-            display: flex; justify-content: space-between; align-items: center; 
-            height: var(--nav-h); position: sticky; top: 0; z-index: 1000;
-        }
-        
+        :root { --bg: #f5f5f7; --card: #ffffff; --text: #1d1d1f; --sub: #515154; --border: rgba(0,0,0,0.08); --nav-h: 72px; }
+        body.dark { --bg: #000000; --card: #1c1c1e; --text: #f5f5f7; --sub: #86868b; --border: rgba(255,255,255,0.1); }
+        body { font-family: -apple-system, BlinkMacSystemFont, sans-serif; background: var(--bg); color: var(--text); margin: 0; transition: background 0.4s ease; -webkit-font-smoothing: antialiased; }
+        .nav { background: var(--bg); border-bottom: 0.5px solid var(--border); padding: 0 40px; display: flex; justify-content: space-between; align-items: center; height: var(--nav-h); position: sticky; top: 0; z-index: 1000; }
         .logo { font-weight: 800; font-size: 20px; letter-spacing: -0.04em; }
-        
-        #theme-toggle { 
-            cursor: pointer; width: 40px; height: 40px; border-radius: 50%; 
-            border: none; background: var(--text); color: var(--bg); 
-            display: flex; align-items: center; justify-content: center; 
-        }
+        #theme-toggle { cursor: pointer; width: 40px; height: 40px; border-radius: 50%; border: none; background: var(--text); color: var(--bg); display: flex; align-items: center; justify-content: center; }
         .theme-icon { width: 18px; height: 18px; }
         body.dark .sun, body:not(.dark) .moon { display: none; }
-        
         .hero { max-width: 800px; margin: 80px auto 40px; padding: 0 20px; }
-        .hero h1 { 
-            font-size: 56px; font-weight: 800; letter-spacing: -0.05em; margin: 0;
-            background: linear-gradient(180deg, var(--text) 0%, var(--sub) 100%);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-        }
-        
+        .hero h1 { font-size: 64px; font-weight: 800; letter-spacing: -0.05em; margin: 0; }
         .grid { max-width: 800px; margin: 0 auto; padding: 0 20px 100px; display: grid; gap: 48px; }
-        
-        /* G3 Squircle and Notion Styling */
-        .squircle { 
-            border-radius: 32px; background: var(--card); border: 1px solid var(--border);
-            padding: 40px; box-shadow: 0 10px 40px var(--glow);
-        }
-        
-        .status-pill { font-size: 10px; font-weight: 700; padding: 4px 12px; border-radius: 6px; background: var(--accent); color: white; text-transform: uppercase; margin-bottom: 20px; display: inline-block; }
-        
-        .news-card h3 { font-size: 30px; margin: 0 0 24px 0; font-weight: 700; line-height: 1.2; letter-spacing: -0.03em; }
+        .squircle { border-radius: 42px; background: var(--card); border: 1px solid var(--border); padding: 45px; }
+        .status-pill { font-size: 10px; font-weight: 700; padding: 4px 12px; border-radius: 6px; border: 1px solid var(--border); color: var(--sub); text-transform: uppercase; margin-bottom: 24px; display: inline-block; }
+        .news-card h3 { font-size: 32px; margin: 0 0 28px 0; font-weight: 800; line-height: 1.15; letter-spacing: -0.04em; }
         .news-card h3 a { color: inherit; text-decoration: none; display: flex; align-items: center; gap: 12px; }
-        .link-icon { width: 22px; height: 22px; opacity: 0.2; }
-        
-        .tldr-section { border-top: 1px solid var(--border); padding-top: 24px; }
-        .tldr-label { font-size: 11px; font-weight: 800; color: var(--accent); text-transform: uppercase; margin: 0 0 12px 0; letter-spacing: 0.1em; }
-        
-        .news-card ul { margin: 0; padding-left: 18px; color: var(--sub); list-style-type: square; }
-        .news-card li { font-size: 18px; line-height: 1.6; margin-bottom: 12px; }
-        
+        .link-icon { width: 24px; height: 24px; opacity: 0.2; }
+        .content-section { border-top: 1px solid var(--border); padding-top: 28px; }
+        .news-card ul { margin: 0; padding-left: 18px; color: var(--sub); }
+        .news-card li { font-size: 19px; line-height: 1.6; margin-bottom: 14px; list-style-type: square; }
+        b { color: var(--text); font-weight: 700; }
         .archive-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; margin-top: 40px; }
-        .archive-btn { border-radius: 12px; background: var(--card); padding: 16px; text-decoration: none; color: var(--text); font-weight: 600; text-align: center; border: 1px solid var(--border); font-size: 14px; }
+        .archive-btn { border-radius: 12px; background: var(--card); padding: 16px; text-decoration: none; color: var(--text); font-weight: 600; text-align: center; border: 1px solid var(--border); font-size: 14px; transition: 0.2s; }
     </style>
 </head>
 <body>
-    <nav class="nav">
-        <div id="main-logo" class="logo">NEXUS INTELLIGENCE</div>
-        <button id="theme-toggle" onclick="toggleTheme()"><svg class="theme-icon sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"></path></svg><svg class="theme-icon moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path></svg></button>
-    </nav>
-    <div class="hero">
-        <h1>Nexus Intelligence.</h1>
-        <p style="font-weight: 600; opacity: 0.5; margin-top: 10px;">The definitive technology briefing.</p>
-    </div>
+    <nav class="nav"><div id="main-logo" class="logo">NEXUS</div><button id="theme-toggle" onclick="toggleTheme()"><svg class="theme-icon sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"></path></svg><svg class="theme-icon moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path></svg></button></nav>
+    <div class="hero"><h1>Intelligence.</h1></div>
     <main class="grid">
         <div class="news-card squircle">
-            <span class="status-pill">AI Core</span>
-            <h3><a href="https://www.thehindu.com/sci-tech/technology/" target="_blank">Meta Solidifies 'Agentic AI' Future with $2B Manus Acquisition <svg class="link-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg></a></h3>
-            <div class="tldr-section">
-                <p class="tldr-label">TL;DR</p>
-                <ul><li>Strategic Pivot:** Meta has officially clarified its acquisition of Singapore-based startup **Manus AI**, a deal valued at over **$2 billion**, signaling a massive shift from simple LLMs to autonomous agents.</li><li>Geopolitical De-risking:** Meta addressed concerns regarding the startup's origin, confirming there is **"no continuing China-link,"** ensuring compliance with tightening global AI regulations.</li></ul>
+            <span class="status-pill">Neural</span>
+            <h3><a href="https://timesofindia.indiatimes.com/technology/tech-news/mark-zuckerbergs-meta-makes-it-third-largest-acquisition-after-whatsapp-and-scale-ai-buys-ai-company-with-chinese-roots/articleshow/126246227.cms" target="_blank">Meta Acquires Manus AI in $2 Billion Deal to Fuel Autonomous Agents <svg class="link-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg></a></h3>
+            <div class="content-section">
+                <ul><li>Zuckerberg’s Meta has completed its <b>third-largest acquisition</b> ever, absorbing the startup <b>Manus AI</b> to integrate advanced <b>general-purpose autonomous agents</b> into its ecosystem.</li><li>The deal aims to enhance Meta’s AI chatbot with <b>coding and data analysis</b> capabilities, positioning the company as a dominant force against rivals like Google and OpenAI in the <b>agentic AI</b> race.</li></ul>
             </div>
         </div>
         <div class="news-card squircle">
-            <span class="status-pill">Big Tech</span>
-            <h3><a href="https://www.thehindu.com/sci-tech/technology/" target="_blank">ByteDance Commits $14 Billion to Nvidia Chips for 2026 Pipeline <svg class="link-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg></a></h3>
-            <div class="tldr-section">
-                <p class="tldr-label">TL;DR</p>
-                <ul><li>Infrastructure Dominance:** TikTok parent ByteDance is reportedly planning to spend **$14 billion on Nvidia AI chips** in 2026, securing the hardware necessary for next-generation content recommendation and generative video.</li><li>Compute Arms Race:** This massive investment underscores the "utility-scale" phase of AI, where infrastructure capacity has become the primary competitive moat for global tech giants.</li></ul>
+            <span class="status-pill">Neural</span>
+            <h3><a href="https://www.caixinglobal.com/2026-01-01/moonshot-ai-rules-out-quick-ipo-after-raising-500-million-102399382.html" target="_blank">Moonshot AI Raises $500 Million and Rules Out Near-Term IPO <svg class="link-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg></a></h3>
+            <div class="content-section">
+                <ul><li>Chinese AI leader <b>Moonshot AI</b> secured a massive <b>Series C round</b> of $500 million, bringing its total cash reserves to over <b>$1.4 billion</b> as 2026 begins.</li><li>Founder Yang Zhilin confirmed the company is in <b>no rush to list</b> publicly, opting instead to focus on <b>foundational model stability</b> while competitors like Zhipu AI pursue Hong Kong listings.</li></ul>
             </div>
         </div>
         <div class="news-card squircle">
-            <span class="status-pill">AI Core</span>
-            <h3><a href="https://www.caixinglobal.com/2026-01-01/moonshot-ai-rules-out-quick-ipo-after-raising-500-million-102399382.html" target="_blank">Moonshot AI Secures $500M; Rejects Immediate IPO Plans <svg class="link-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg></a></h3>
-            <div class="tldr-section">
-                <p class="tldr-label">TL;DR</p>
-                <ul><li>Market Resilience:** Chinese AI standout Moonshot AI closed a **$500 million funding round** on New Year's Day, strengthening its balance sheet against Hong Kong-bound rivals like Zhipu AI.</li><li>Long-term Vision:** Founder Yang Zhilin emphasized a **"no rush"** approach to going public, prioritizing foundational model stability over short-term market liquidity.</li></ul>
+            <span class="status-pill">Neural</span>
+            <h3><a href="https://www.gadgets360.com/news" target="_blank">Elon Musk’s xAI Expands Infrastructure with Third Major Building Acquisition <svg class="link-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg></a></h3>
+            <div class="content-section">
+                <ul><li>To aggressively scale its <b>AI compute power</b>, Elon Musk's <b>xAI</b> has purchased its third dedicated building to house massive <b>GPU clusters</b> required for training future Grok iterations.</li><li>This expansion highlights the ongoing <b>global infrastructure race</b>, where physical space and <b>energy capacity</b> have become the ultimate bottlenecks for frontier AI development.</li></ul>
             </div>
         </div>
         <div class="news-card squircle">
-            <span class="status-pill">AI Core</span>
-            <h3><a href="https://www.whalesbook.com/news/English/Tech/Indias-AI-Future-Ignites-2026-Poised-for-Massive-BOOM-as-Govt-and-Big-Tech-Pour-Billions-into-Tech-Revolution/695477e64342f77179ecca5d" target="_blank">India’s 2026 AI Boom: Government-Backed 'Sovereign' Models to Debut <svg class="link-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg></a></h3>
-            <div class="tldr-section">
-                <p class="tldr-label">TL;DR</p>
-                <ul><li>Sovereign Tech:** The Indian government has confirmed the launch of at least one **foundational AI model** built on local data and non-English languages to be showcased at the upcoming Global AI Summit.</li><li>Data Center Surge:** Over **$50 billion** in data center investments are slated for on-ground implementation in 2026, aiming to turn the nation into a global hub for AI inference.</li></ul>
-            </div>
-        </div>
-        <div class="news-card squircle">
-            <span class="status-pill">AI Core</span>
-            <h3><a href="https://in.mashable.com/tech/104118/january-2026-phone-launches-in-india-redmi-note-15-realme-16-pro-and-more" target="_blank">CES 2026 & January Launch Cycle: The Return of 'Hardware-First' AI <svg class="link-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg></a></h3>
-            <div class="tldr-section">
-                <p class="tldr-label">TL;DR</p>
-                <ul><li>Device Wave:** A "hectic" start to 2026 sees **Realme 16 Pro, Redmi Note 15, and OnePlus Turbo 6** all scheduled for Jan 6th launches, featuring dedicated AI-photography silicon.</li><li>Ambient Intelligence:** Early CES previews highlight a transition toward **"Invisible Tech"**—AI integrated into smart fabrics and modular audio systems (Samsung/LG) rather than standalone gadgets.</li></ul>
+            <span class="status-pill">Neural</span>
+            <h3><a href="https://www.gadgets360.com/news" target="_blank">Redmi Turbo 5 Pro Details Surface Following 3C Certification Leak <svg class="link-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg></a></h3>
+            <div class="content-section">
+                <ul><li>The upcoming <b>Redmi Turbo 5 Pro</b> has reportedly appeared in certification databases, confirming it will feature the latest <b>MediaTek Dimensity chips</b> and significantly faster charging speeds.</li><li>This launch marks the first major <b>AI-focused smartphone</b> rollout of 2026, targeting the mid-range market with high-performance <b>on-device intelligence</b> features.</li></ul>
             </div>
         </div>
         <div class="news-card squircle">
             <span class="status-pill">Nexus Intelligence</span>
-            <h3><a href="#" target="_blank">Would you like me to dive deeper into any of these stories, or perhaps track the market reaction for your Halal-compliant investment watchlist? <svg class="link-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg></a></h3>
-            <div class="tldr-section">
-                <p class="tldr-label">TL;DR</p>
-                <ul></ul>
+            <h3><a href="https://timesofindia.indiatimes.com/technology" target="_blank">Samsung Galaxy S26 Ultra Camera Island Redesign Leaked Ahead of Launch <svg class="link-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg></a></h3>
+            <div class="content-section">
+                <ul><li>Early 2026 leaks suggest the <b>Galaxy S26 Ultra</b> will adopt a radical new <b>camera island design</b> inspired by the Galaxy Z Fold 7, signaling a major aesthetic shift for the flagship series.</li><li>The new hardware is expected to be paired with <b>Samsung’s 2026 AI photography suite</b>, which focuses on <b>generative image reconstruction</b> and ultra-low-light video enhancement.</li></ul>
             </div>
         </div></main>
-    <section style="max-width: 800px; margin: 0 auto 120px; padding: 0 20px;">
-        <h2 style="font-size: 24px; font-weight: 800;">Archive</h2>
-        <div class="archive-grid"><a class="archive-btn squircle-sm" href="briefings/2025-12-31.md">2025-12-31</a></div>
-    </section>
+    <section style="max-width: 800px; margin: 0 auto 120px; padding: 0 20px;"><h2 style="font-size: 24px; font-weight: 800;">Archive</h2><div class="archive-grid"><a class="archive-btn" href="briefings/2025-12-31.md">2025-12-31</a></div></section>
     <script>
-        function updateLogo(theme) {
-            const logo = document.getElementById('main-logo');
-            logo.style.setProperty('color', theme === 'dark' ? '#ffffff' : '#000000', 'important');
-        }
-        function toggleTheme() {
-            const body = document.body;
-            body.classList.toggle('dark');
-            const theme = body.classList.contains('dark') ? 'dark' : 'light';
-            localStorage.setItem('nexus-v-pro-list', theme);
-            updateLogo(theme);
-        }
-        window.onload = () => {
-            const saved = localStorage.getItem('nexus-v-pro-list') || 'light';
-            if (saved === 'dark') document.body.classList.add('dark');
-            updateLogo(saved);
-        };
+        function updateLogo(theme) { const logo = document.getElementById('main-logo'); logo.style.setProperty('color', theme === 'dark' ? '#ffffff' : '#000000', 'important'); }
+        function toggleTheme() { const body = document.body; body.classList.toggle('dark'); const theme = body.classList.contains('dark') ? 'dark' : 'light'; localStorage.setItem('nexus-v-emoji', theme); updateLogo(theme); }
+        window.onload = () => { const saved = localStorage.getItem('nexus-v-emoji') || 'light'; if (saved === 'dark') document.body.classList.add('dark'); updateLogo(saved); };
     </script>
 </body>
 </html>
