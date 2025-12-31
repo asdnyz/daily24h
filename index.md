@@ -1,69 +1,93 @@
 
 <style>
-    :root { --primary: #2563eb; --bg: #f8fafc; --card-bg: #ffffff; --text-main: #1e293b; --text-sub: #64748b; }
-    body { font-family: 'Inter', -apple-system, sans-serif; background-color: var(--bg); color: var(--text-main); margin: 0; padding: 20px; line-height: 1.6; }
-    .container { max-width: 900px; margin: 0 auto; }
-    .header { padding: 40px 0; border-bottom: 2px solid #e2e8f0; margin-bottom: 30px; }
-    .header h1 { font-size: 2.8rem; font-weight: 800; margin: 0; color: #0f172a; letter-spacing: -0.03em; }
-    .status-bar { display: flex; align-items: center; gap: 10px; margin-top: 15px; font-size: 0.9rem; font-weight: 500; color: var(--text-sub); }
-    .live-dot { height: 10px; width: 10px; background-color: #22c55e; border-radius: 50%; display: inline-block; animation: pulse 2s infinite; }
+    :root {
+        --bg: #f3f4f6; --card-bg: #ffffff; --text: #1f2937;
+        --accent: #3b82f6; --border: #e5e7eb; --header-text: #111827;
+    }
+    [data-theme="dark"] {
+        --bg: #0f172a; --card-bg: #1e293b; --text: #e2e8f0;
+        --accent: #60a5fa; --border: #334155; --header-text: #f8fafc;
+    }
+    body { font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color: var(--text); transition: 0.3s; margin: 0; padding: 20px; }
+    .container { max-width: 850px; margin: 0 auto; }
     
-    /* Card Layout */
-    .news-grid { display: flex; flex-direction: column; gap: 25px; }
-    .news-card { 
-        background: var(--card-bg); border: 1px solid #f1f5f9; border-radius: 20px; 
-        padding: 30px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
-        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-    .news-card:hover { transform: translateY(-5px); box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); border-color: var(--primary); }
-    .news-card h3 { margin-top: 0; font-size: 1.5rem; font-weight: 700; color: #1e293b; }
-    .news-card h3 a { color: inherit; text-decoration: none; border-bottom: 2px solid transparent; transition: 0.2s; }
-    .news-card h3 a:hover { color: var(--primary); border-bottom-color: var(--primary); }
-    .news-card p { color: var(--text-sub); font-size: 1.1rem; margin-bottom: 0; }
+    .top-nav { display: flex; justify-content: space-between; align-items: center; padding: 20px 0; border-bottom: 2px solid var(--border); margin-bottom: 30px; }
+    #theme-toggle { cursor: pointer; padding: 8px 15px; border-radius: 20px; border: 1px solid var(--border); background: var(--card-bg); color: var(--text); font-weight: 600; font-size: 0.8rem; transition: 0.2s; }
+    #theme-toggle:hover { border-color: var(--accent); }
 
-    .archive-section { margin-top: 60px; padding: 40px; background: #f1f5f9; border-radius: 24px; }
-    .archive-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; margin-top: 20px; }
-    .archive-link { 
-        background: white; padding: 15px; border-radius: 12px; text-decoration: none; 
-        color: var(--text-main); font-weight: 600; font-size: 0.95rem; text-align: center;
-        border: 1px solid #e2e8f0; transition: 0.3s;
+    .news-card {
+        background: var(--card-bg); border: 1px solid var(--border); border-radius: 18px;
+        padding: 25px; margin-bottom: 20px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
-    .archive-link:hover { background: var(--primary); color: white; transform: scale(1.05); }
+    .news-card:hover { transform: translateY(-4px); box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1); }
+    .news-card h3 { margin: 0 0 12px 0; font-size: 1.4rem; color: var(--header-text); }
+    .news-card h3 a { color: inherit; text-decoration: none; border-bottom: 2px solid transparent; }
+    .news-card h3 a:hover { border-bottom-color: var(--accent); }
+    
+    .sentiment-badge { font-size: 0.75rem; font-weight: 700; padding: 4px 10px; border-radius: 12px; margin-bottom: 10px; display: inline-block; text-transform: uppercase; }
+    .pos { background: #dcfce7; color: #166534; }
+    .neg { background: #fee2e2; color: #991b1b; }
 
-    @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; } }
+    .archive-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; margin-top: 20px; }
+    .archive-btn { background: var(--card-bg); border: 1px solid var(--border); padding: 12px; border-radius: 12px; text-decoration: none; color: var(--text); text-align: center; font-size: 0.9rem; transition: 0.2s; }
+    .archive-btn:hover { background: var(--accent); color: white; border-color: var(--accent); }
 </style>
 
+<script>
+    function toggleTheme() {
+        const html = document.documentElement;
+        const current = html.getAttribute('data-theme');
+        const next = current === 'dark' ? 'light' : 'dark';
+        html.setAttribute('data-theme', next);
+        localStorage.setItem('theme', next);
+        document.getElementById('theme-toggle').innerText = next === 'dark' ? '☀️ LIGHT MODE' : '🌙 DARK MODE';
+    }
+    window.onload = () => {
+        const saved = localStorage.getItem('theme') || 'light';
+        document.documentElement.setAttribute('data-theme', saved);
+        document.getElementById('theme-toggle').innerText = saved === 'dark' ? '☀️ LIGHT MODE' : '🌙 DARK MODE';
+    };
+</script>
+
 <div class="container">
-    <div class="header">
-        <h1>Nexus Intelligence</h1>
-        <div class="status-bar">
-            <span class="live-dot"></span>
-            <span>SYSTEM LIVE</span> • 
-            <span>LAST SCAN: 2025-12-31 12:38 UTC</span>
-        </div>
+    <div class="top-nav">
+        <h1 style="margin:0; font-weight:800; letter-spacing:-0.03em;">Nexus Intelligence</h1>
+        <button id="theme-toggle" onclick="toggleTheme()">🌙 DARK MODE</button>
     </div>
+    
+    <p style="color:var(--text-sub); margin-bottom:30px;">
+        <span style="color:#22c55e;">●</span> <b>LIVE UPDATES</b> • Last Scan: 2025-12-31 12:42 UTC
+    </p>
 
     <div class="news-grid">
-        <div class="news-card">### Meta to acquire Manus to boost advanced AI features
-**Summary**: Meta is acquiring AI startup Manus, signaling a significant investment in advancing its artificial intelligence capabilities. This move is part of Meta's broader strategy to enhance its AI offerings across its social media platforms.</div>
-<div class="news-card">### OpenAI hiring Head of Preparedness amid AI cyberattack fears
-**Summary**: OpenAI is seeking a Head of Preparedness to address the potential threats posed by advanced AI, particularly concerning cybersecurity vulnerabilities. This signifies a growing concern within the AI community about the risks associated with powerful AI systems.</div>
-<div class="news-card">### Kioxia Holdings sees world-beating stock gains due to AI memory demand
-**Summary**: Japanese memory chipmaker Kioxia Holdings has experienced significant stock growth driven by the high demand for AI-related data storage. This surge highlights the crucial role of memory infrastructure in supporting the expanding AI boom and the development of AI data centers.</div>
-<div class="news-card">### Disney integrates generative AI into its core operating model
-**Summary**: The Walt Disney Company is embedding generative AI across its entire business operations, moving beyond experimental phases. This integration aims to improve efficiency in content creation, post-production, and personalized guest experiences.</div>
-<div class="news-card">### Justice Department calls for breakup of Google and sale of Chrome
-**Summary**: The U.S. Department of Justice has proposed breaking up Google, which includes selling its Chrome browser and restricting its Android software. This action reflects ongoing antitrust concerns regarding Google's dominant market position in search and web browsing.</div>
+        <div class="news-card"><span class="sentiment-badge pos">Growth</span>
+Here are five of the biggest global tech and AI news stories from the last 24 hours:
+
+### Mistral AI Secures €1.7 Billion in Funding, Becomes Europe's Most Valuable AI Startup
+**Summary**: French AI startup Mistral AI has raised €1.7 billion (approximately $2 billion) in a Series C funding round led by ASML, valuing the company at €11.7 billion and making it Europe's most valuable AI startup. This significant investment highlights Europe's ambition to foster homegrown AI champions capable of competing with U.S. tech giants like OpenAI and Google.</div>
+<div class="news-card"><span class="sentiment-badge neg">Alert</span>
+### Meta Acquires Chinese-Founded AI Startup Manus for $2 Billion
+**Summary**: Meta has acquired Manus, a Singapore-based, Chinese-founded AI firm specializing in agentic AI for small and medium-sized businesses, for an undisclosed sum reported to be around $2 billion. This acquisition is part of Meta's broader strategy to advance its AI offerings across its platforms and enhance its push for "personal superintelligence."</div>
+<div class="news-card"><span class="sentiment-badge neg">Alert</span>
+### Disney Deepens Generative AI Integration with OpenAI Partnership and $1 Billion Investment
+**Summary**: The Walt Disney Company is embedding generative AI across its entire operating structure, enhancing content creation, post-production, and guest experiences. This includes a significant strategic partnership with OpenAI, involving a $1 billion equity investment and the use of OpenAI's APIs for products like Disney+, as well as internal adoption of ChatGPT for employees.</div>
+<div class="news-card"><span class="sentiment-badge neg">Alert</span>
+### China Accelerates Humanoid Robot Production Amid Global Race
+**Summary**: Chinese companies like UBTech Robotics and AgiBot are rapidly expanding their humanoid robot production, with plans to deliver thousands of units in the coming years. This surge in manufacturing capacity positions China to potentially lead the global market in humanoid robots, even as U.S. companies like Tesla focus on AI advancements in this sector.</div>
+<div class="news-card"><span class="sentiment-badge neg">Alert</span>
+### Sweden Launches World's First AI Music License to Protect Songwriters
+**Summary**: Sweden has introduced the first-ever AI music license, designed to allow AI companies to train models on copyrighted songs while ensuring the protection of songwriters' rights. This groundbreaking framework aims to balance intellectual property concerns with the advancement of AI in the music industry and could serve as a model for other nations.</div>
 
     </div>
 
-    <div class="archive-section">
-        <h2 style="margin-top:0">📚 Historical Data</h2>
+    <div style="margin-top:60px; padding:30px; background:rgba(100,116,139,0.05); border-radius:24px;">
+        <h3 style="margin-top:0">📚 Intelligence Archive</h3>
         <div class="archive-grid">
-<a class='archive-link' href='briefings/2025-12-31.md'>2025-12-31</a>
+<a class='archive-btn' href='briefings/2025-12-31.md'>2025-12-31</a>
         </div>
     </div>
-    <footer style="text-align: center; margin-top: 50px; color: #94a3b8; font-size: 0.9rem;">
-        Engineered with Gemini 2.5 Flash-Lite • Neural Search via Google
+    <footer style="text-align: center; padding: 40px 0; color: #94a3b8; font-size: 0.85rem;">
+        Pipeline: Google Search Tool → Gemini 2.5 Flash-Lite → GitHub Actions
     </footer>
 </div>
