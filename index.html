@@ -6,69 +6,69 @@
     <title>Nexus Intelligence</title>
     <style>
         :root { 
-            --bg: #f5f5f7; --card: rgba(255, 255, 255, 0.75); --text: #1d1d1f; 
-            --sub: #86868b; --border: rgba(0,0,0,0.08); --nav-h: 72px;
-            --glow: rgba(0, 113, 227, 0.15);
+            --bg: #f5f5f7; --card: #ffffff; --text: #1d1d1f; 
+            --sub: #515154; --border: rgba(0,0,0,0.08); --nav-h: 72px;
+            --accent: #34c759; --glow: rgba(0,0,0,0.02);
         }
         body.dark { 
-            --bg: #000000; --card: rgba(28, 28, 30, 0.75); --text: #f5f5f7; 
-            --sub: #86868b; --border: rgba(255,255,255,0.12);
-            --glow: rgba(10, 132, 255, 0.2);
+            --bg: #000000; --card: #1c1c1e; --text: #f5f5f7; 
+            --sub: #86868b; --border: rgba(255,255,255,0.1); 
+            --glow: rgba(255,255,255,0.02);
         }
         
         body { 
-            font-family: -apple-system, Helvetica, sans-serif; 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
             background: var(--bg); color: var(--text); margin: 0; 
-            transition: background 0.6s ease; -webkit-font-smoothing: antialiased; 
+            transition: background 0.4s ease; -webkit-font-smoothing: antialiased; 
         }
         
-        /* Neural Nav Bar */
         .nav { 
-            background: var(--card); backdrop-filter: blur(40px) saturate(200%);
-            -webkit-backdrop-filter: blur(40px) saturate(200%);
+            background: var(--bg); backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
             border-bottom: 0.5px solid var(--border); padding: 0 40px; 
             display: flex; justify-content: space-between; align-items: center; 
             height: var(--nav-h); position: sticky; top: 0; z-index: 1000;
         }
         
-        .logo { font-weight: 700; font-size: 22px; letter-spacing: -0.04em; }
+        .logo { font-weight: 800; font-size: 20px; letter-spacing: -0.04em; }
         
         #theme-toggle { 
-            cursor: pointer; width: 44px; height: 44px; border-radius: 980px; 
+            cursor: pointer; width: 40px; height: 40px; border-radius: 50%; 
             border: none; background: var(--text); color: var(--bg); 
             display: flex; align-items: center; justify-content: center; 
-            transition: 0.3s;
         }
-        .theme-icon { width: 20px; height: 20px; }
+        .theme-icon { width: 18px; height: 18px; }
         body.dark .sun, body:not(.dark) .moon { display: none; }
         
-        /* Neural Hero Glow */
-        .hero { max-width: 900px; margin: 100px auto 60px; padding: 0 20px; text-align: center; }
+        .hero { max-width: 800px; margin: 80px auto 40px; padding: 0 20px; }
         .hero h1 { 
-            font-size: 72px; font-weight: 800; letter-spacing: -0.05em; margin: 0;
+            font-size: 56px; font-weight: 800; letter-spacing: -0.05em; margin: 0;
             background: linear-gradient(180deg, var(--text) 0%, var(--sub) 100%);
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            text-shadow: 0 10px 30px var(--glow);
         }
         
-        .grid { max-width: 900px; margin: 0 auto; padding: 0 20px 100px; display: grid; gap: 40px; }
+        .grid { max-width: 800px; margin: 0 auto; padding: 0 20px 100px; display: grid; gap: 48px; }
         
-        /* G3 Squircle Curves */
+        /* G3 Squircle and Notion Styling */
         .squircle { 
-            border-radius: 42px; background: var(--card); border: 1px solid var(--border);
-            padding: 45px; transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+            border-radius: 32px; background: var(--card); border: 1px solid var(--border);
+            padding: 40px; box-shadow: 0 10px 40px var(--glow);
         }
-        .squircle:hover { transform: scale(1.015); }
         
-        .news-card h3 { font-size: 32px; margin: 18px 0; font-weight: 700; }
-        .news-card h3 a { color: inherit; text-decoration: none; display: flex; align-items: center; gap: 14px; }
-        .link-icon { width: 24px; height: 24px; opacity: 0.2; }
-        .news-card p { font-size: 19px; color: var(--sub); line-height: 1.55; }
+        .status-pill { font-size: 10px; font-weight: 700; padding: 4px 12px; border-radius: 6px; background: var(--accent); color: white; text-transform: uppercase; margin-bottom: 20px; display: inline-block; }
         
-        .status-pill { font-size: 11px; font-weight: 700; padding: 6px 14px; border-radius: 980px; background: #34c759; color: white; text-transform: uppercase; display: inline-block; }
+        .news-card h3 { font-size: 30px; margin: 0 0 24px 0; font-weight: 700; line-height: 1.2; letter-spacing: -0.03em; }
+        .news-card h3 a { color: inherit; text-decoration: none; display: flex; align-items: center; gap: 12px; }
+        .link-icon { width: 22px; height: 22px; opacity: 0.2; }
         
-        .archive-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 16px; margin-top: 40px; }
-        .archive-btn { border-radius: 20px; background: var(--card); padding: 25px; text-decoration: none; color: var(--text); font-weight: 600; text-align: center; border: 1px solid var(--border); transition: 0.3s; }
+        .tldr-section { border-top: 1px solid var(--border); padding-top: 24px; }
+        .tldr-label { font-size: 11px; font-weight: 800; color: var(--accent); text-transform: uppercase; margin: 0 0 12px 0; letter-spacing: 0.1em; }
+        
+        .news-card ul { margin: 0; padding-left: 18px; color: var(--sub); list-style-type: square; }
+        .news-card li { font-size: 18px; line-height: 1.6; margin-bottom: 12px; }
+        
+        .archive-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; margin-top: 40px; }
+        .archive-btn { border-radius: 12px; background: var(--card); padding: 16px; text-decoration: none; color: var(--text); font-weight: 600; text-align: center; border: 1px solid var(--border); font-size: 14px; }
     </style>
 </head>
 <body>
@@ -78,36 +78,51 @@
     </nav>
     <div class="hero">
         <h1>Nexus Intelligence.</h1>
-        <div style="font-size: 13px; font-weight: 700; color: #34c759; margin-top: 30px;">AI NEWS AGGREGATOR ● ONLINE</div>
+        <p style="font-weight: 600; opacity: 0.5; margin-top: 10px;">The definitive technology briefing.</p>
     </div>
     <main class="grid">
         <div class="news-card squircle">
             <span class="status-pill">AI Core</span>
             <h3><a href="https://www.google.com/search?q=https://openai.com/news/operator-2026-launch" target="_blank">The Year of the Agent: OpenAI’s ‘Operator’ Reaches Full Public Rollout <svg class="link-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg></a></h3>
-            <p>**** Kicking off 2026, OpenAI has moved its autonomous agent, **Operator**, from limited beta to a full public release. This system marks a shift from LLMs that merely process text to **Action-Oriented Models (AOMs)** that can execute complex browser-based tasks, handle software troubleshooting, and manage multi-app workflows without human intervention. > **TLDR:** We have officially entered the **"Agentic Era"** where AI is no longer a chatbot but a co-worker capable of executing end-to-end digital labor. **Key Takeaways:** * **Computer Use:** Native ability to navigate macOS, Windows, and Linux environments. * **Contextual Memory:** Persistent memory across sessions, allowing the agent to "remember" specific user preferences for recurring tasks. * **Safety Protocols:** New "Human-in-the-loop" checkpoints for financial transactions or sensitive data deletion.</p>
+            <div class="tldr-section">
+                <p class="tldr-label">TL;DR</p>
+                <ul><li>Summary:** Kicking off 2026, OpenAI has moved its autonomous agent, **Operator**, from limited beta to a full public release. This system marks a shift from LLMs that merely process text to **Action-Oriented Models (AOMs)** that can execute complex browser-based tasks, handle software troubleshooting, and manage multi-app workflows without human intervention.</li><li>Key Takeaways:**</li><li>Computer Use:** Native ability to navigate macOS, Windows, and Linux environments.</li><li>Contextual Memory:** Persistent memory across sessions, allowing the agent to "remember" specific user preferences for recurring tasks.</li><li>Safety Protocols:** New "Human-in-the-loop" checkpoints for financial transactions or sensitive data deletion.</li></ul>
+            </div>
         </div>
         <div class="news-card squircle">
             <span class="status-pill">Nexus Intelligence</span>
             <h3><a href="https://www.google.com/search?q=https://www.ces.tech/announcements/2026-preview" target="_blank">CES 2026 Preview: 'Ambient Intelligence' Takes Center Stage in Las Vegas <svg class="link-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg></a></h3>
-            <p>**** As the tech world descends on Las Vegas for CES 2026, the dominant theme is **Ambient AI**. Unlike the screen-heavy gadgets of years past, the new wave focuses on **"Invisible Tech"**—AI integrated into the physical environment through smart fabrics, transparent displays, and furniture that adapts to human posture and health metrics in real-time. **The Sequential Impact of 2026 Hardware:** 1. **Energy Harvesting:** Devices powered by indoor light and RF signals, reducing reliance on lithium batteries. 2. **Sensory Integration:** Wearables that use **biometric feedback** to adjust home lighting and acoustics automatically. 3. **Local Inference:** A move away from the cloud; almost all CES 2026 home tech performs AI processing on-device for privacy.</p>
+            <div class="tldr-section">
+                <p class="tldr-label">TL;DR</p>
+                <ul><li>Summary:** As the tech world descends on Las Vegas for CES 2026, the dominant theme is **Ambient AI**. Unlike the screen-heavy gadgets of years past, the new wave focuses on **"Invisible Tech"**—AI integrated into the physical environment through smart fabrics, transparent displays, and furniture that adapts to human posture and health metrics in real-time.</li><li>The Sequential Impact of 2026 Hardware:**</li></ul>
+            </div>
         </div>
         <div class="news-card squircle">
             <span class="status-pill">Nexus Intelligence</span>
             <h3><a href="https://www.google.com/search?q=https://www.ibm.com/quantum/2026-milestone" target="_blank">Quantum Leap: IBM Successfully Demonstrates 2,000-Qubit Error-Corrected Processor <svg class="link-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg></a></h3>
-            <p>**** In a New Year's Day scientific breakthrough, IBM researchers published results demonstrating a **logical qubit** with a significant reduction in noise. This 2,000-qubit processor utilizes a new **modular architecture**, allowing quantum units to be "tiled" together to scale toward the long-sought goal of a 10,000-qubit system. > **TLDR:** The "Quantum Winter" is over; we are seeing the first practical applications in **molecular simulation** and cryptography that were previously impossible for classical supercomputers. **Key Takeaways:** * **Fault Tolerance:** Breakthrough in error-correction codes that allows for longer "coherence times." * **Hybrid Cloud:** Integration of quantum processing units (QPUs) directly into standard **Azure and AWS AI workflows**. * **Material Science:** Early-stage simulations for more efficient solid-state batteries are already underway.</p>
+            <div class="tldr-section">
+                <p class="tldr-label">TL;DR</p>
+                <ul><li>Summary:** In a New Year's Day scientific breakthrough, IBM researchers published results demonstrating a **logical qubit** with a significant reduction in noise. This 2,000-qubit processor utilizes a new **modular architecture**, allowing quantum units to be "tiled" together to scale toward the long-sought goal of a 10,000-qubit system.</li><li>Key Takeaways:**</li><li>Fault Tolerance:** Breakthrough in error-correction codes that allows for longer "coherence times."</li><li>Hybrid Cloud:** Integration of quantum processing units (QPUs) directly into standard **Azure and AWS AI workflows**.</li><li>Material Science:** Early-stage simulations for more efficient solid-state batteries are already underway.</li></ul>
+            </div>
         </div>
         <div class="news-card squircle">
             <span class="status-pill">Nexus Intelligence</span>
             <h3><a href="https://www.google.com/search?q=https://www.reuters.com/technology/robotics-2026-factory-deployment" target="_blank">Humanoid Robotics: Figure 03 and Optimus Gen 3 Enter Factory Trials <svg class="link-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg></a></h3>
-            <p>**** 2026 marks the year humanoids move from labs to the assembly line. Figure and Tesla have both announced that their latest iterations—**Figure 03** and **Optimus Gen 3**—have begun full-shift integration trials in automotive manufacturing. These robots now possess **tactile dexterity** sufficient to handle wire harnesses and delicate upholstery, tasks previously reserved for human hands. **Golden Nuggets:** * **End-to-End Neural Nets:** The robots learn via **imitation learning**, watching human videos to master new physical skills in hours rather than weeks. * **Cost Efficiency:** Projected "cost-per-hour" for robot labor has dropped below **$4/hour** in large-scale deployments.</p>
+            <div class="tldr-section">
+                <p class="tldr-label">TL;DR</p>
+                <ul><li>Summary:** 2026 marks the year humanoids move from labs to the assembly line. Figure and Tesla have both announced that their latest iterations—**Figure 03** and **Optimus Gen 3**—have begun full-shift integration trials in automotive manufacturing. These robots now possess **tactile dexterity** sufficient to handle wire harnesses and delicate upholstery, tasks previously reserved for human hands.</li><li>Golden Nuggets:**</li><li>End-to-End Neural Nets:** The robots learn via **imitation learning**, watching human videos to master new physical skills in hours rather than weeks.</li><li>Cost Efficiency:** Projected "cost-per-hour" for robot labor has dropped below **$4/hour** in large-scale deployments.</li></ul>
+            </div>
         </div>
         <div class="news-card squircle">
-            <span class="status-pill">Nexus Intelligence</span>
+            <span class="status-pill">AI Core</span>
             <h3><a href="https://www.google.com/search?q=https://www.un.org/ai-safety-2026" target="_blank">Global AI Safety Accord: The 'Red Line' Framework Goes Into Effect <svg class="link-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg></a></h3>
-            <p>**** On January 1st, the first international treaty regarding **Frontier AI Safety** officially became law for signatory nations. The accord establishes "Red Lines" for AI development, specifically targeting **autonomous biological synthesis** and recursive self-improvement without human oversight. > "Regulation is no longer a suggestion; it is the infrastructure upon which the next generation of AGI will be built." — *Global AI Council Chair* **Sequential Compliance Steps:** 1. **Registry:** All clusters with over  FLOPs of compute must be registered with the council. 2. **Watermarking:** Mandatory **C2PA standards** for all AI-generated content to combat election-year deepfakes. 3. **Audits:** Quarterly third-party safety audits for any model designated as a "Frontier System."</p>
+            <div class="tldr-section">
+                <p class="tldr-label">TL;DR</p>
+                <ul><li>Summary:** On January 1st, the first international treaty regarding **Frontier AI Safety** officially became law for signatory nations. The accord establishes "Red Lines" for AI development, specifically targeting **autonomous biological synthesis** and recursive self-improvement without human oversight.</li><li>Sequential Compliance Steps:**</li></ul>
+            </div>
         </div></main>
-    <section style="max-width: 900px; margin: 0 auto 120px; padding: 0 20px;">
-        <h2 style="font-size: 36px; font-weight: 800;">Archive.</h2>
+    <section style="max-width: 800px; margin: 0 auto 120px; padding: 0 20px;">
+        <h2 style="font-size: 24px; font-weight: 800;">Archive</h2>
         <div class="archive-grid"><a class="archive-btn squircle-sm" href="briefings/2025-12-31.md">2025-12-31</a></div>
     </section>
     <script>
@@ -119,11 +134,11 @@
             const body = document.body;
             body.classList.toggle('dark');
             const theme = body.classList.contains('dark') ? 'dark' : 'light';
-            localStorage.setItem('nexus-v-neural', theme);
+            localStorage.setItem('nexus-v-pro-list', theme);
             updateLogo(theme);
         }
         window.onload = () => {
-            const saved = localStorage.getItem('nexus-v-neural') || 'light';
+            const saved = localStorage.getItem('nexus-v-pro-list') || 'light';
             if (saved === 'dark') document.body.classList.add('dark');
             updateLogo(saved);
         };
