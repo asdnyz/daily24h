@@ -7,8 +7,8 @@ from google.genai import types
 client = genai.Client(api_key=os.environ.get("GEMINI_API_KEY"))
 
 def generate_index_html(latest_content):
-    """Generates a high-end dashboard using G3 squircle geometry and Apple design language."""
-    print("🍏 Applying G3 Squircle geometry and Cupertino styling...")
+    """Generates a high-end dashboard using G3 squircle geometry without any hardcoded blue."""
+    print("🍏 Cleaning blue colors and applying G3 Squircle geometry...")
     
     link_icon = '<svg class="link-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>'
 
@@ -57,11 +57,11 @@ def generate_index_html(latest_content):
     <style>
         :root {{ 
             --bg: #f5f5f7; --card: rgba(255, 255, 255, 0.7); --text: #1d1d1f; 
-            --sub: #86868b; --border: rgba(0,0,0,0.08); --accent: #0071e3; 
+            --sub: #86868b; --border: rgba(0,0,0,0.08); --accent: #000000; 
         }}
         body.dark {{ 
             --bg: #000000; --card: rgba(28, 28, 30, 0.7); --text: #f5f5f7; 
-            --sub: #86868b; --border: rgba(255,255,255,0.12); --accent: #0a84ff; 
+            --sub: #86868b; --border: rgba(255,255,255,0.12); --accent: #ffffff; 
         }}
         
         body {{ 
@@ -70,7 +70,6 @@ def generate_index_html(latest_content):
             line-height: 1.4; letter-spacing: -0.02em; -webkit-font-smoothing: antialiased;
         }}
 
-        /* G3 Continuity Navigation */
         .nav {{ 
             background: var(--card); backdrop-filter: blur(30px) saturate(180%);
             -webkit-backdrop-filter: blur(30px) saturate(180%);
@@ -86,37 +85,30 @@ def generate_index_html(latest_content):
             border: none; background: var(--text); color: var(--bg); 
             font-size: 12px; font-weight: 600; transition: all 0.3s;
         }}
-        #theme-toggle:hover {{ transform: scale(1.05); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }}
 
         .hero {{ max-width: 900px; margin: 90px auto 50px; padding: 0 20px; text-align: center; }}
         .hero h1 {{ font-size: 64px; font-weight: 800; letter-spacing: -0.04em; margin: 0; line-height: 1.1; }}
         .hero p {{ font-size: 24px; color: var(--sub); margin: 15px 0; font-weight: 500; }}
 
-        /* The Squircle Grid */
         .grid {{ max-width: 900px; margin: 0 auto; padding: 0 20px 100px; display: grid; gap: 32px; }}
         
-        /* G3 Curve Emulation */
         .squircle {{ 
-            border-radius: 42px; /* Large radius for squircle look */
+            border-radius: 42px;
             background: var(--card); border: 1px solid var(--border);
             padding: 40px; transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-            box-shadow: 0 10px 40px rgba(0,0,0,0.03);
         }}
-        .squircle:hover {{ transform: scale(1.02) translateY(-5px); box-shadow: 0 30px 60px rgba(0,0,0,0.1); border-color: var(--accent); }}
         
-        .news-card h3 {{ font-size: 28px; margin: 18px 0; font-weight: 700; letter-spacing: -0.03em; }}
+        .news-card h3 {{ font-size: 28px; margin: 18px 0; font-weight: 700; }}
         .news-card h3 a {{ color: inherit; text-decoration: none; display: inline-flex; align-items: center; gap: 14px; }}
-        .link-icon {{ width: 22px; height: 22px; opacity: 0.3; transition: 0.3s; }}
-        .news-card h3 a:hover .link-icon {{ opacity: 1; transform: translate(3px, -3px); color: var(--accent); }}
-        .news-card p {{ font-size: 18px; color: var(--sub); line-height: 1.5; font-weight: 400; }}
+        .link-icon {{ width: 22px; height: 22px; opacity: 0.3; }}
+        .news-card p {{ font-size: 18px; color: var(--sub); line-height: 1.5; }}
 
-        /* Status Pills */
         .status-pill {{ 
             font-size: 11px; font-weight: 700; padding: 5px 14px; border-radius: 980px; 
             text-transform: uppercase; letter-spacing: 0.05em; display: inline-block;
         }}
         .badge-growth {{ background: #34c759; color: white; }}
-        .badge-update {{ background: var(--accent); color: white; }}
+        .badge-update {{ background: var(--text); color: var(--bg); }}
 
         .archive-grid {{ display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 16px; margin-top: 40px; }}
         .squircle-sm {{ 
@@ -124,12 +116,8 @@ def generate_index_html(latest_content):
             text-decoration: none; color: var(--text); font-weight: 600; text-align: center;
             border: 1px solid var(--border); transition: 0.4s;
         }}
-        .squircle-sm:hover {{ background: var(--accent); color: white; border-color: var(--accent); transform: translateY(-3px); }}
 
-        @media (max-width: 768px) {{
-            .hero h1 {{ font-size: 42px; }}
-            .squircle {{ border-radius: 32px; padding: 30px; }}
-        }}
+        @keyframes pulse {{ 0% {{ opacity: 1; }} 50% {{ opacity: 0.4; }} 100% {{ opacity: 1; }} }}
     </style>
 </head>
 <body>
@@ -140,13 +128,13 @@ def generate_index_html(latest_content):
     <div class="hero">
         <h1>Global Intelligence.</h1>
         <p>Grounded data. Verified by AI.</p>
-        <div style="font-size: 12px; font-weight: 700; color: #34c759; margin-top: 25px; letter-spacing: 0.1em;">
-            <span style="animation: pulse 2s infinite;">●</span> LIVE UPDATES • {datetime.now().strftime("%H:%M")} UTC
+        <div style="font-size: 12px; font-weight: 700; color: #34c759; margin-top: 25px;">
+            <span style="animation: pulse 2s infinite;">●</span> LIVE UPDATES
         </div>
     </div>
     <main class="grid">{cards_html}</main>
     <section style="max-width: 900px; margin: 0 auto 100px; padding: 0 20px;">
-        <h2 style="font-size: 32px; font-weight: 700; letter-spacing: -0.03em;">Archive.</h2>
+        <h2 style="font-size: 32px; font-weight: 700;">Archive.</h2>
         <div class="archive-grid">{archive_links}</div>
     </section>
 
@@ -165,13 +153,13 @@ def generate_index_html(latest_content):
             body.classList.toggle('dark');
             const isDark = body.classList.contains('dark');
             const theme = isDark ? 'dark' : 'light';
-            localStorage.setItem('nexus-theme-v2', theme);
+            localStorage.setItem('nexus-theme-v3', theme);
             document.getElementById('theme-toggle').innerText = isDark ? 'Light Mode' : 'Dark Mode';
             updateLogo(theme);
         }}
 
         window.onload = () => {{
-            const savedTheme = localStorage.getItem('nexus-theme-v2') || 'light';
+            const savedTheme = localStorage.getItem('nexus-theme-v3') || 'light';
             if (savedTheme === 'dark') {{
                 document.body.classList.add('dark');
                 document.getElementById('theme-toggle').innerText = 'Light Mode';
@@ -198,7 +186,6 @@ def fetch_and_save_news():
             with open(f"briefings/{{dt}}.md", "w", encoding="utf-8") as f:
                 f.write(response.text)
             generate_index_html(response.text)
-            print("🍏 Dashboard updated with G3 Continuity styling.")
     except Exception as e: print(f"❌ Error: {{e}}")
 
 if __name__ == "__main__":
