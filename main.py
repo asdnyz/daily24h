@@ -18,11 +18,12 @@ def get_latest_briefing_content():
     list_of_files = glob.glob('briefings/*.md')
     if not list_of_files: return None
     latest_file = max(list_of_files, key=os.path.getmtime)
+    print(f"🔄 Fallback recovery: {latest_file}")
     with open(latest_file, "r", encoding="utf-8") as f:
         return f.read()
 
 def generate_index_html(latest_content):
-    """Generates the NIUS Terminal UI with Emoji preservation and Unified Nav."""
+    """Generates the NIUS Terminal UI with your specific branding and Emoji support."""
     print("🍏 Building NIUS Terminal UI...")
     
     sun_icon = '<svg class="theme-icon sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"></path></svg>'
@@ -36,14 +37,10 @@ def generate_index_html(latest_content):
         lines = [l.strip() for l in story.split('\n') if l.strip()]
         if not lines: continue
         
-        # SMART TITLE PARSER: Preserves Emoji, Title, and Link
+        # Smart Title Parser to preserve Emojis
         title_line = lines[0].replace('### ', '').replace('**', '').strip()
-        
-        # Extract URL using regex to ensure the emoji stays with the title_text
         url_match = re.search(r'\((https?://\S+)\)', title_line)
         url = url_match.group(1) if url_match else "#"
-        
-        # Clean title_text of the Markdown link syntax [ ]( )
         title_text = re.sub(r'\[|\]|\(https?://\S+\)', '', title_line).strip()
         
         # Convert Body Bolding (** -> <b>)
@@ -95,28 +92,23 @@ def generate_index_html(latest_content):
             -webkit-font-smoothing: antialiased; 
         }}
 
-        /* Unified Static Nav */
         .nav {{ 
             position: fixed; top: 0; left: 0; right: 0; height: var(--nav-h);
             display: flex; align-items: center; justify-content: space-between;
             padding: 0 40px; z-index: 2000;
-            background: var(--bg);
-            border-bottom: 0.5px solid var(--border);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
+            background: var(--bg); border-bottom: 0.5px solid var(--border);
+            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
         }}
         
         .nav-center {{ 
             position: absolute; left: 50%; transform: translateX(-50%);
-            display: flex; align-items: center; gap: 12px;
-            white-space: nowrap;
+            display: flex; align-items: center; gap: 12px; white-space: nowrap;
         }}
 
-        .logo-main {{ font-weight: 900; font-size: 20px; letter-spacing: -0.05em; display: flex; align-items: left; gap: 8px; }}
-        .logo-sub {{ font-weight: 900; font-size: 20px; letter-spacing: -0.05em; display: flex; align-items: center; gap: 8px; }}
+        .logo-main, .logo-sub {{ font-weight: 900; font-size: 20px; letter-spacing: -0.05em; display: flex; align-items: center; gap: 8px; }}
+        .logo-sub {{ opacity: 0.4; font-size: 14px; }}
 
-        /* Live Indicator */
-        .pulse {{ width: 8px; height: 8px; background: #34c759; border-radius: 50%; box-shadow: 0 0 0 rgba(52, 199, 89, 0.4); animation: pulse 2s infinite; }}
+        .pulse {{ width: 8px; height: 8px; background: #34c759; border-radius: 50%; animation: pulse 2s infinite; }}
         @keyframes pulse {{ 0% {{ box-shadow: 0 0 0 0 rgba(52, 199, 89, 0.7); }} 70% {{ box-shadow: 0 0 0 10px rgba(52, 199, 89, 0); }} 100% {{ box-shadow: 0 0 0 0 rgba(52, 199, 89, 0); }} }}
 
         #theme-toggle {{ 
@@ -128,8 +120,6 @@ def generate_index_html(latest_content):
         body.dark .sun, body:not(.dark) .moon {{ display: none; }}
         
         .container {{ max-width: 900px; margin: 120px auto 100px; padding: 0 40px; display: grid; gap: 60px; }}
-        
-        /* G3 Squircle */
         .squircle {{ border-radius: 42px; background: var(--card); border: 1px solid var(--border); padding: 45px; }}
         
         .news-card h3 {{ font-size: 34px; margin: 0 0 32px 0; font-weight: 800; line-height: 1.15; letter-spacing: -0.04em; }}
@@ -148,6 +138,7 @@ def generate_index_html(latest_content):
 </head>
 <body>
     <nav class="nav">
+        <div style="opacity:0">Spacer</div>
         <div class="nav-center">
             <span class="logo-main"><div class="pulse"></div> N.I.U.S. </span>
             <span class="logo-sub">News.Intelligence.Ultimate.Source.</span>
@@ -177,7 +168,7 @@ def generate_index_html(latest_content):
 
     with open("index.html", "w", encoding="utf-8") as f:
         f.write(full_html)
-    print("✅ Build Complete: NIUS Terminal (Fixed Emojis).")
+    print("✅ Build Complete: NIUS Terminal (Fixed Emojis & Weights).")
 
 def fetch_and_save_news():
     prompt = "Search for top 5 AI/Tech stories from last 24h. Use format: ### [Emoji] [Title](URL) \\n - bullet point with **bold keywords** \\n --- \\n YOU MUST INCLUDE AN EMOJI."
