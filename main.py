@@ -6,133 +6,116 @@ from google.genai import types
 # 1. Initialize Client
 client = genai.Client(api_key=os.environ.get("GEMINI_API_KEY"))
 
-def update_index_page(latest_briefing_path, latest_content):
-    """Generates a high-end, responsive Dashboard with Dark Mode and Sentiment Badges."""
-    print("💎 Polishing UI with Dark Mode and News Cards...")
+def generate_index_html(latest_content):
+    """Generates a complete, standalone HTML dashboard."""
+    print("💎 Building Standalone HTML Dashboard...")
     
-    # Advanced 2025 CSS + JavaScript Toggle
-    css_and_js = """
-<style>
-    :root {
-        --bg: #f3f4f6; --card-bg: #ffffff; --text: #1f2937;
-        --accent: #3b82f6; --border: #e5e7eb; --header-text: #111827;
-    }
-    [data-theme="dark"] {
-        --bg: #0f172a; --card-bg: #1e293b; --text: #e2e8f0;
-        --accent: #60a5fa; --border: #334155; --header-text: #f8fafc;
-    }
-    body { font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color: var(--text); transition: 0.3s; margin: 0; padding: 20px; }
-    .container { max-width: 850px; margin: 0 auto; }
-    
-    .top-nav { display: flex; justify-content: space-between; align-items: center; padding: 20px 0; border-bottom: 2px solid var(--border); margin-bottom: 30px; }
-    #theme-toggle { cursor: pointer; padding: 8px 15px; border-radius: 20px; border: 1px solid var(--border); background: var(--card-bg); color: var(--text); font-weight: 600; font-size: 0.8rem; transition: 0.2s; }
-    #theme-toggle:hover { border-color: var(--accent); }
-
-    .news-card {
-        background: var(--card-bg); border: 1px solid var(--border); border-radius: 18px;
-        padding: 25px; margin-bottom: 20px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-    .news-card:hover { transform: translateY(-4px); box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1); }
-    .news-card h3 { margin: 0 0 12px 0; font-size: 1.4rem; color: var(--header-text); }
-    .news-card h3 a { color: inherit; text-decoration: none; border-bottom: 2px solid transparent; }
-    .news-card h3 a:hover { border-bottom-color: var(--accent); }
-    
-    .sentiment-badge { font-size: 0.75rem; font-weight: 700; padding: 4px 10px; border-radius: 12px; margin-bottom: 10px; display: inline-block; text-transform: uppercase; }
-    .pos { background: #dcfce7; color: #166534; }
-    .neg { background: #fee2e2; color: #991b1b; }
-
-    .archive-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; margin-top: 20px; }
-    .archive-btn { background: var(--card-bg); border: 1px solid var(--border); padding: 12px; border-radius: 12px; text-decoration: none; color: var(--text); text-align: center; font-size: 0.9rem; transition: 0.2s; }
-    .archive-btn:hover { background: var(--accent); color: white; border-color: var(--accent); }
-</style>
-
-<script>
-    function toggleTheme() {
-        const html = document.documentElement;
-        const current = html.getAttribute('data-theme');
-        const next = current === 'dark' ? 'light' : 'dark';
-        html.setAttribute('data-theme', next);
-        localStorage.setItem('theme', next);
-        document.getElementById('theme-toggle').innerText = next === 'dark' ? '☀️ LIGHT MODE' : '🌙 DARK MODE';
-    }
-    window.onload = () => {
-        const saved = localStorage.getItem('theme') || 'light';
-        document.documentElement.setAttribute('data-theme', saved);
-        document.getElementById('theme-toggle').innerText = saved === 'dark' ? '☀️ LIGHT MODE' : '🌙 DARK MODE';
-    };
-</script>
-"""
-
-    # We use Gemini to detect sentiment and assign a class
+    # Process the AI content into HTML blocks
     raw_stories = latest_content.split('---')
     cards_html = ""
     for story in raw_stories:
         if story.strip():
-            # Simple keyword check for badge color (can be upgraded to AI check)
-            badge = '<span class="sentiment-badge pos">Growth</span>' if "update" in story.lower() or "new" in story.lower() else '<span class="sentiment-badge neg">Alert</span>'
-            cards_html += f'<div class="news-card">{badge}\n{story.strip()}</div>\n'
+            # Basic text processing to make it look good in HTML
+            content = story.strip().replace("### ", "<h3>").replace("**Summary**:", "<strong>Summary</strong>:")
+            cards_html += f'<div class="news-card">{content}</div>\n'
 
-    html_content = f"""{css_and_js}
-<div class="container">
-    <div class="top-nav">
-        <h1 style="margin:0; font-weight:800; letter-spacing:-0.03em;">Nexus Intelligence</h1>
-        <button id="theme-toggle" onclick="toggleTheme()">🌙 DARK MODE</button>
-    </div>
-    
-    <p style="color:var(--text-sub); margin-bottom:30px;">
-        <span style="color:#22c55e;">●</span> <b>LIVE UPDATES</b> • Last Scan: {datetime.now().strftime("%Y-%m-%d %H:%M")} UTC
-    </p>
-
-    <div class="news-grid">
-        {cards_html}
-    </div>
-
-    <div style="margin-top:60px; padding:30px; background:rgba(100,116,139,0.05); border-radius:24px;">
-        <h3 style="margin-top:0">📚 Intelligence Archive</h3>
-        <div class="archive-grid">
-"""
-    # Load past briefings
+    # Archive Logic: Get last 10 days
+    archive_links = ""
     if os.path.exists("briefings"):
         files = sorted(os.listdir("briefings"), reverse=True)
-        for f in files[:8]:
+        for f in files[:10]:
             if f.endswith(".md"):
                 date_val = f.replace(".md", "")
-                html_content += f"<a class='archive-btn' href='briefings/{f}'>{date_val}</a>"
+                archive_links += f'<a class="archive-link" href="briefings/{f}">{date_val}</a>\n'
 
-    html_content += """
+    # The FULL Standalone HTML Template
+    full_html = f"""<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nexus Intelligence Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {{ --primary: #2563eb; --bg: #f8fafc; --card: #ffffff; --text: #1e293b; --sub: #64748b; }}
+        * {{ box-sizing: border-box; }}
+        body {{ font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); margin: 0; line-height: 1.6; }}
+        .nav {{ background: #fff; border-bottom: 1px solid #e2e8f0; padding: 1rem 2rem; position: sticky; top: 0; z-index: 100; }}
+        .nav-content {{ max-width: 1000px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }}
+        .logo {{ font-weight: 800; font-size: 1.5rem; color: #0f172a; letter-spacing: -0.03em; }}
+        .status {{ display: flex; align-items: center; gap: 8px; font-size: 0.8rem; font-weight: 600; color: #22c55e; }}
+        .dot {{ height: 8px; width: 8px; background: #22c55e; border-radius: 50%; animation: pulse 2s infinite; }}
+        
+        .hero {{ max-width: 1000px; margin: 40px auto; padding: 0 20px; }}
+        .hero h1 {{ font-size: 3rem; font-weight: 800; margin-bottom: 10px; color: #0f172a; letter-spacing: -0.04em; }}
+        .hero p {{ color: var(--sub); font-size: 1.1rem; }}
+
+        .grid {{ max-width: 1000px; margin: 0 auto 60px; padding: 0 20px; display: grid; gap: 24px; }}
+        .news-card {{ background: var(--card); border: 1px solid #e2e8f0; border-radius: 16px; padding: 32px; transition: 0.3s; }}
+        .news-card:hover {{ transform: translateY(-4px); box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); border-color: var(--primary); }}
+        .news-card h3 {{ margin-top: 0; font-size: 1.4rem; }}
+        .news-card h3 a {{ color: inherit; text-decoration: none; }}
+        .news-card h3 a:hover {{ color: var(--primary); }}
+        
+        .archive {{ background: #f1f5f9; padding: 60px 20px; }}
+        .archive-inner {{ max-width: 1000px; margin: 0 auto; }}
+        .archive-grid {{ display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; margin-top: 20px; }}
+        .archive-link {{ background: #fff; padding: 15px; border-radius: 10px; text-decoration: none; color: var(--text); font-weight: 600; text-align: center; border: 1px solid #e2e8f0; transition: 0.2s; }}
+        .archive-link:hover {{ background: var(--primary); color: #fff; }}
+
+        @keyframes pulse {{ 0% {{ opacity: 1; }} 50% {{ opacity: 0.4; }} 100% {{ opacity: 1; }} }}
+        @media (max-width: 600px) {{ .hero h1 {{ font-size: 2rem; }} }}
+    </style>
+</head>
+<body>
+    <nav class="nav">
+        <div class="nav-content">
+            <div class="logo">NEXUS</div>
+            <div class="status"><span class="dot"></span> SYSTEM LIVE</div>
         </div>
-    </div>
-    <footer style="text-align: center; padding: 40px 0; color: #94a3b8; font-size: 0.85rem;">
-        Pipeline: Google Search Tool → Gemini 2.5 Flash-Lite → GitHub Actions
+    </nav>
+    <header class="hero">
+        <h1>Intelligence Briefing</h1>
+        <p>Real-time AI News Aggregator • Updated {datetime.now().strftime("%Y-%m-%d %H:%M")} UTC</p>
+    </header>
+    <main class="grid">
+        {cards_html}
+    </main>
+    <section class="archive">
+        <div class="archive-inner">
+            <h2>Historical Archives</h2>
+            <div class="archive-grid">
+                {archive_links}
+            </div>
+        </div>
+    </section>
+    <footer style="text-align: center; padding: 40px; color: var(--sub); font-size: 0.9rem;">
+        Engineered with Gemini 2.5 Flash-Lite & GitHub Actions
     </footer>
-</div>
-"""
+</body>
+</html>"""
     
-    with open("index.md", "w", encoding="utf-8") as f:
-        f.write(html_content)
+    with open("index.html", "w", encoding="utf-8") as f:
+        f.write(full_html)
 
-def fetch_and_save_news(topic="Global Tech & AI News"):
-    print(f"🔎 Executing Neural Search: {topic}...")
-    prompt = f"Summarize the 5 biggest news stories from the last 24 hours about {topic}. For each: ### [Title](URL) \n **Summary**: 2 sentences. \n ---"
-
+def fetch_and_save_news():
+    print("🔎 Starting Neural Search...")
+    prompt = "Summarize top 5 news stories from last 24h about Global Tech & AI. Use structure: ### [Title](URL) Summary: 2 lines. ---"
     try:
         response = client.models.generate_content(
             model="gemini-2.5-flash-lite", 
             contents=prompt,
             config=types.GenerateContentConfig(tools=[types.Tool(google_search=types.GoogleSearch())])
         )
-
         if response.text:
             os.makedirs("briefings", exist_ok=True)
             dt = datetime.now().strftime("%Y-%m-%d")
-            path = f"briefings/{dt}.md"
-            with open(path, "w", encoding="utf-8") as f:
-                f.write(f"# Report {dt}\n\n{response.text}")
-            
-            update_index_page(path, response.text)
-            print("🚀 Dashboard live and updated.")
-
+            with open(f"briefings/{dt}.md", "w", encoding="utf-8") as f:
+                f.write(response.text)
+            generate_index_html(response.text)
+            print("✅ Dashboard Generated.")
     except Exception as e:
         print(f"❌ Error: {e}")
 
