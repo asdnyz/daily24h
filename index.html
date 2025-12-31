@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nexus Intelligence</title>
+    <style>
+        :root { --bg: #f5f5f7; --card: rgba(255, 255, 255, 0.7); --text: #1d1d1f; --sub: #86868b; --border: rgba(0,0,0,0.08); }
+        body.dark { --bg: #000000; --card: rgba(28, 28, 30, 0.7); --text: #f5f5f7; --sub: #86868b; --border: rgba(255,255,255,0.15); }
+        
+        body { font-family: -apple-system, BlinkMacSystemFont, sans-serif; background: var(--bg); color: var(--text); margin: 0; transition: background 0.5s ease; -webkit-font-smoothing: antialiased; }
+        
+        /* G3 Glassmorphism Nav */
+        .nav { background: var(--card); backdrop-filter: blur(25px) saturate(180%); -webkit-backdrop-filter: blur(25px) saturate(180%); border-bottom: 0.5px solid var(--border); padding: 0 30px; display: flex; justify-content: space-between; align-items: center; height: 52px; position: sticky; top: 0; z-index: 1000; }
+        .logo { font-weight: 700; font-size: 20px; letter-spacing: -0.03em; }
+        
+        #theme-toggle { cursor: pointer; padding: 6px 16px; border-radius: 980px; border: none; background: var(--text); color: var(--bg); font-size: 11px; font-weight: 600; }
+        
+        .hero { max-width: 900px; margin: 80px auto 40px; padding: 0 20px; text-align: center; }
+        .hero h1 { font-size: 56px; font-weight: 800; letter-spacing: -0.04em; margin: 0; }
+        
+        .grid { max-width: 900px; margin: 0 auto; padding: 0 20px 80px; display: grid; gap: 32px; }
+        
+        /* G3 Squircle Continuity */
+        .squircle { border-radius: 42px; background: var(--card); border: 1px solid var(--border); padding: 40px; transition: 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
+        .squircle:hover { transform: scale(1.02); }
+        
+        .news-card h3 { font-size: 28px; margin: 18px 0; font-weight: 700; }
+        .news-card h3 a { color: inherit; text-decoration: none; display: flex; align-items: center; gap: 12px; }
+        .link-icon { width: 22px; height: 22px; opacity: 0.3; }
+        .news-card p { font-size: 18px; color: var(--sub); line-height: 1.5; }
+        
+        .status-pill { font-size: 11px; font-weight: 700; padding: 5px 14px; border-radius: 980px; background: #34c759; color: white; text-transform: uppercase; display: inline-block; }
+        
+        .archive-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 16px; margin-top: 40px; }
+        .squircle-sm { border-radius: 18px; background: var(--card); padding: 20px; text-decoration: none; color: var(--text); font-weight: 600; text-align: center; border: 1px solid var(--border); transition: 0.3s; }
+    </style>
+</head>
+<body>
+    <nav class="nav">
+        <div id="main-logo" class="logo">Nexus Intelligence</div>
+        <button id="theme-toggle" onclick="toggleTheme()">Dark Mode</button>
+    </nav>
+    <div class="hero">
+        <h1>Global Intelligence.</h1>
+        <div style="font-size: 12px; font-weight: 700; color: #34c759; margin-top: 20px;">● SYSTEM LIVE</div>
+    </div>
+    <main class="grid">
+        <div class="news-card squircle">
+            <span class="status-pill">Intelligence Brief</span>
+            <h3><a href="#" target="_blank">Mistral AI Secures €1.7 Billion in Series C Funding <svg class="link-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg></a></h3>
+            <p>French startup Mistral AI has successfully raised €1.7 billion in a Series C funding round, led by Dutch chipmaker ASML. This significant investment values the company at €11.7 billion, making it the most valuable AI startup in Europe. The funding is intended to help Mistral AI scale its global operations and strengthen its competitive position against major AI players like OpenAI and Google. ASML's investment gives them an 11% ownership stake and a seat on Mistral's strategic committee.</p>
+        </div>
+        <div class="news-card squircle">
+            <span class="status-pill">Intelligence Brief</span>
+            <h3><a href="#" target="_blank">Nebius Signs $17.4 Billion Deal with Microsoft for AI Infrastructure <svg class="link-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg></a></h3>
+            <p>AI infrastructure provider Nebius has entered into a five-year agreement with Microsoft, potentially worth up to $19.4 billion. This deal will see Nebius supply advanced GPU (Graphics Processing Unit) infrastructure, which is crucial for training large-scale AI models. The partnership highlights the immense and growing demand for high-performance computing power needed to develop next-generation AI technologies.</p>
+        </div>
+        <div class="news-card squircle">
+            <span class="status-pill">Intelligence Brief</span>
+            <h3><a href="#" target="_blank">Disney Embeds Generative AI into its Core Operating Model <svg class="link-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg></a></h3>
+            <p>The Walt Disney Company is integrating generative AI across its entire operational structure, moving beyond experimental phases into fundamental business applications. This initiative aims to enhance content creation, streamline post-production processes, and improve personalized guest experiences in theme parks. Disney plans to centralize AI development to optimize creative workflows and leverage its extensive intellectual property for proprietary model training.</p>
+        </div>
+        <div class="news-card squircle">
+            <span class="status-pill">Intelligence Brief</span>
+            <h3><a href="#" target="_blank">Salesforce Re-evaluates Aggressive Generative AI Use Amid Reliability Challenges <svg class="link-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg></a></h3>
+            <p>Salesforce, a major enterprise software company, is reportedly reassessing its extensive use of generative AI due to ongoing reliability issues and a decline in internal confidence. Senior executives have indicated that trust in large language models has diminished following operational failures and customer complaints, leading to a scaling back of AI system deployments.</p>
+        </div>
+        <div class="news-card squircle">
+            <span class="status-pill">Intelligence Brief</span>
+            <h3><a href="#" target="_blank">Nvidia Partners with AI Startup Groq and Acquires Key Talent <svg class="link-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg></a></h3>
+            <p>Nvidia has formed a strategic partnership with AI chip startup Groq, acquiring a non-exclusive license for Groq's AI inference chip technology. Additionally, Nvidia has hired key personnel from Groq, including its founder and former CEO, Jonathan Ross, along with other senior engineers. This collaboration aims to advance and scale the licensed AI technology.</p>
+        </div></main>
+    <section style="max-width: 900px; margin: 0 auto 100px; padding: 0 20px;">
+        <h2 style="font-size: 32px; font-weight: 700;">Archive.</h2>
+        <div class="archive-grid"><a class="archive-btn squircle-sm" href="briefings/{f}">{date_val}</a></div>
+    </section>
+    <script>
+        function updateLogo(theme) {
+            const logo = document.getElementById('main-logo');
+            logo.style.setProperty('color', theme === 'dark' ? '#ffffff' : '#000000', 'important');
+        }
+        function toggleTheme() {
+            const body = document.body;
+            body.classList.toggle('dark');
+            const theme = body.classList.contains('dark') ? 'dark' : 'light';
+            localStorage.setItem('nexus-v-auto', theme);
+            document.getElementById('theme-toggle').innerText = theme === 'dark' ? 'Light Mode' : 'Dark Mode';
+            updateLogo(theme);
+        }
+        window.onload = () => {
+            const saved = localStorage.getItem('nexus-v-auto') || 'light';
+            if (saved === 'dark') document.body.classList.add('dark');
+            document.getElementById('theme-toggle').innerText = saved === 'dark' ? 'Light Mode' : 'Dark Mode';
+            updateLogo(saved);
+        };
+    </script>
+</body>
+</html>
