@@ -3,6 +3,9 @@ import yaml
 import json
 import requests
 import pandas as pd
+import matplotlib
+# Use Agg backend for headless environments (GitHub Actions)
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 from datetime import datetime
 from google import genai
@@ -45,7 +48,10 @@ def fetch_structured_news(topic):
     return json.loads(response.text)
 
 def generate_visualizations(history):
-    if not history: return
+    if not history:
+        print("⚠️ No history data found to generate chart.")
+        return
+    
     df = pd.DataFrame(history)
     
     # Chart 1: Market Pulse (Sentiment vs Impact Scatter)
@@ -57,12 +63,19 @@ def generate_visualizations(history):
     plt.xlabel("Sentiment Score (Negative ← 0 → Positive)")
     plt.ylabel("Industry Impact (1-10)")
     plt.grid(True, alpha=0.2)
+    
+    # Ensure directory exists before saving
+    os.makedirs("briefings", exist_ok=True)
     plt.savefig("briefings/pulse_chart.png")
     plt.close()
+    print("✅ Chart saved to briefings/pulse_chart.png")
 
 def main():
     date_str = datetime.now().strftime("%Y-%m-%d")
     master_report = f"# {config['settings']['bot_name']} - {date_str}\n\n"
+    
+    # Link the image in Markdown
+    master_report += "## Market Pulse Snapshot\n"
     master_report += "![Market Pulse](briefings/pulse_chart.png)\n\n---\n"
     
     history_records = []
@@ -82,22 +95,26 @@ def main():
             print(f"❌ Error processing {topic['label']}: {e}")
 
     # Save Markdown for GitHub Pages
-    os.makedirs("briefings", exist_ok=True)
     with open("index.md", "w", encoding="utf-8") as f:
         f.write(master_report)
     
     # Save/Update JSON History
+    os.makedirs("briefings", exist_ok=True)
     hist_file = "briefings/history.json"
     existing_data = []
+    
     if os.path.exists(hist_file):
-        with open(hist_file, "r") as f:
-            existing_data = json.load(f)
+        try:
+            with open(hist_file, "r") as f:
+                existing_data = json.load(f)
+        except:
+            existing_data = []
     
     existing_data.extend(history_records)
     with open(hist_file, "w") as f:
         json.dump(existing_data[-100:], f) # Store last 100 entries
 
-    # Generate Visualization
+    # Generate Visualization using cumulative history
     generate_visualizations(existing_data)
 
 if __name__ == "__main__":
