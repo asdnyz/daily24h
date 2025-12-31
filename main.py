@@ -7,38 +7,71 @@ from google.genai import types
 client = genai.Client(api_key=os.environ.get("GEMINI_API_KEY"))
 
 def update_index_page(latest_briefing_path, latest_content):
-    """Updates index.md to act as the homepage for GitHub Pages."""
-    print("🏠 Updating index.md...")
+    """Updates index.md with a modern, card-based UI layout."""
+    print("🎨 Styling index.md for a modern look...")
     
-    # Header for the dashboard
-    header = f"""# 🚀 AI News Intelligence Dashboard
-> Last updated: {datetime.now().strftime("%Y-%m-%d %H:%M:%S")} UTC
+    # Modern CSS Styles for the dashboard
+    css_style = """
+<style>
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; line-height: 1.6; color: #333; }
+    .news-card {
+        background: #fff; border: 1px solid #e1e4e8; border-radius: 12px;
+        padding: 20px; margin-bottom: 25px; box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        transition: transform 0.2s ease;
+    }
+    .news-card:hover { transform: translateY(-3px); box-shadow: 0 6px 20px rgba(0,0,0,0.1); }
+    .news-title { color: #0366d6; font-size: 1.3em; font-weight: 600; margin-top: 0; }
+    .tag { 
+        display: inline-block; background: #f1f8ff; color: #0366d6; 
+        padding: 2px 10px; border-radius: 20px; font-size: 0.85em; font-weight: 500;
+        margin-bottom: 10px;
+    }
+    .date-badge { color: #586069; font-size: 0.9em; float: right; }
+    .archive-list { list-style: none; padding-left: 0; }
+    .archive-item { padding: 8px 0; border-bottom: 1px dashed #eee; }
+</style>
+"""
 
-## 📍 Latest Briefing
-{latest_content}
+    header = f"""{css_style}
+# 🚀 AI Intelligence Dashboard
+<span class="date-badge">Last Update: {datetime.now().strftime("%Y-%m-%d %H:%M")} UTC</span>
+<p><i>Automated daily briefing leveraging Gemini 2.5 Flash-Lite and Google Search Grounding.</i></p>
 
 ---
-## 📚 Archive
+
+## 📍 Today's Top Stories
 """
-    # Generate archive links from existing files in the briefings folder
+
+    # We tell Gemini in the prompt to format news as cards
+    # But for now, we'll wrap the current content in a single card for impact
+    formatted_content = f'<div class="news-card">\n{latest_content}\n</div>'
+
+    archive_header = "\n\n---\n## 📚 Historical Archive\n<ul class='archive-list'>"
+    
     archive_links = []
     if os.path.exists("briefings"):
         files = sorted(os.listdir("briefings"), reverse=True)
-        for f in files:
+        for f in files[:7]: # Show last 7 days
             if f.endswith(".md"):
                 date_val = f.replace(".md", "")
-                archive_links.append(f"* [{date_val}](briefings/{f})")
+                archive_links.append(f"<li class='archive-item'><a href='briefings/{f}'>📅 {date_val} Briefing</a></li>")
     
-    archive_section = "\n".join(archive_links)
+    footer = "</ul>\n\n[View Full Repository](https://github.com/asdnyz/daily24h)"
     
     with open("index.md", "w", encoding="utf-8") as f:
-        f.write(header + archive_section)
+        f.write(header + formatted_content + archive_header + "\n".join(archive_links) + footer)
 
 def fetch_and_save_news(topic="Global Tech & AI News"):
     print(f"🔎 Searching for: {topic}...")
     
     # Prompt engineering for better resume-style output
-    prompt = f"Summarize the top 5 news stories from the last 24 hours about {topic}. Provide a professional title, a 2-sentence summary for each, and the source link."
+    prompt = f"""
+Summarize the top 5 news stories from the last 24 hours about {topic}. 
+For each story, use this format:
+### [Title](Link)
+**Summary**: Three sentences explaining the significance.
+---
+"""
 
     try:
         response = client.models.generate_content(
