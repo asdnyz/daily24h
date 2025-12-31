@@ -20,28 +20,23 @@
             -webkit-font-smoothing: antialiased; 
         }
 
-        /* Unified Static Nav */
         .nav { 
             position: fixed; top: 0; left: 0; right: 0; height: var(--nav-h);
             display: flex; align-items: center; justify-content: space-between;
             padding: 0 40px; z-index: 2000;
-            background: var(--bg);
-            border-bottom: 0.5px solid var(--border);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
+            background: var(--bg); border-bottom: 0.5px solid var(--border);
+            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
         }
         
         .nav-center { 
             position: absolute; left: 50%; transform: translateX(-50%);
-            display: flex; align-items: center; gap: 12px;
-            white-space: nowrap;
+            display: flex; align-items: center; gap: 12px; white-space: nowrap;
         }
 
-        .logo-main { font-weight: 900; font-size: 20px; letter-spacing: -0.05em; display: flex; align-items: center; gap: 8px; }
-        .logo-sub { font-weight: 500; font-size: 14px; opacity: 0.4; letter-spacing: -0.02em; }
+        .logo-main, .logo-sub { font-weight: 900; font-size: 20px; letter-spacing: -0.05em; display: flex; align-items: center; gap: 8px; }
+        .logo-sub { opacity: 0.4; font-size: 14px; }
 
-        /* Live Indicator */
-        .pulse { width: 8px; height: 8px; background: #34c759; border-radius: 50%; box-shadow: 0 0 0 rgba(52, 199, 89, 0.4); animation: pulse 2s infinite; }
+        .pulse { width: 8px; height: 8px; background: #34c759; border-radius: 50%; animation: pulse 2s infinite; }
         @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(52, 199, 89, 0.7); } 70% { box-shadow: 0 0 0 10px rgba(52, 199, 89, 0); } 100% { box-shadow: 0 0 0 0 rgba(52, 199, 89, 0); } }
 
         #theme-toggle { 
@@ -53,8 +48,6 @@
         body.dark .sun, body:not(.dark) .moon { display: none; }
         
         .container { max-width: 900px; margin: 120px auto 100px; padding: 0 40px; display: grid; gap: 60px; }
-        
-        /* G3 Squircle */
         .squircle { border-radius: 42px; background: var(--card); border: 1px solid var(--border); padding: 45px; }
         
         .news-card h3 { font-size: 34px; margin: 0 0 32px 0; font-weight: 800; line-height: 1.15; letter-spacing: -0.04em; }
@@ -73,9 +66,9 @@
 </head>
 <body>
     <nav class="nav">
-        <div class="nav-date" style="opacity:0">Placeholder</div>
+        <div style="opacity:0">Spacer</div>
         <div class="nav-center">
-            <span class="logo-main"><div class="pulse"></div> N.I.U.S.</span>
+            <span class="logo-main"><div class="pulse"></div> N.I.U.S. </span>
             <span class="logo-sub">News.Intelligence.Ultimate.Source.</span>
         </div>
         <button id="theme-toggle" onclick="toggleTheme()"><svg class="theme-icon sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"></path></svg><svg class="theme-icon moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path></svg></button>
