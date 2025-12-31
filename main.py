@@ -1,7 +1,6 @@
 import os
 import sys
 import glob
-import time
 from datetime import datetime
 from google import genai
 from google.genai import types
@@ -23,7 +22,7 @@ def get_latest_briefing_content():
         return f.read()
 
 def generate_index_html(latest_content):
-    """Generates the premium Dashboard with thick nav and G3 squircles."""
+    """Generates the premium Dashboard with fixed dynamic archive."""
     print("🍏 Building Pro Dashboard UI...")
     
     # Icons as inline SVGs
@@ -31,7 +30,7 @@ def generate_index_html(latest_content):
     moon_icon = '<svg class="theme-icon moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path></svg>'
     link_icon = '<svg class="link-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>'
 
-    # Card Parsing Logic
+    # --- 1. PARSE NEWS CARDS ---
     raw_stories = [s.strip() for s in latest_content.split('---') if s.strip()]
     cards_html = ""
     for story in raw_stories:
@@ -53,15 +52,17 @@ def generate_index_html(latest_content):
             <p>{body_text}</p>
         </div>"""
 
-    # Archive Logic (Last 8)
-    archive_links = ""
+    # --- 2. GENERATE ARCHIVE LINKS (The Fix) ---
+    archive_links_html = ""
     if os.path.exists("briefings"):
+        # Get all .md files, sorted by date (newest first)
         files = sorted(os.listdir("briefings"), reverse=True)
-        for f in files[:8]:
+        for f in files[:12]: # Show last 12 briefings
             if f.endswith(".md"):
-                date_val = f.replace(".md", "")
-                archive_links += f'<a class="archive-btn squircle-sm" href="briefings/{{f}}">{{date_val}}</a>'.replace("{{f}}", f)
+                date_label = f.replace(".md", "")
+                archive_links_html += f'<a class="archive-btn squircle-sm" href="briefings/{f}">{date_label}</a>\n'
 
+    # --- 3. ASSEMBLE FULL HTML ---
     full_html = f"""<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -85,7 +86,6 @@ def generate_index_html(latest_content):
             -webkit-font-smoothing: antialiased; 
         }}
         
-        /* Thick Pro Nav */
         .nav {{ 
             background: var(--card); backdrop-filter: blur(30px) saturate(180%);
             -webkit-backdrop-filter: blur(30px) saturate(180%);
@@ -96,14 +96,12 @@ def generate_index_html(latest_content):
         
         .logo {{ font-weight: 700; font-size: 22px; letter-spacing: -0.04em; }}
         
-        /* Icon Toggle Button */
         #theme-toggle {{ 
             cursor: pointer; width: 44px; height: 44px; border-radius: 980px; 
             border: none; background: var(--text); color: var(--bg); 
             display: flex; align-items: center; justify-content: center; 
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }}
-        #theme-toggle:hover {{ transform: scale(1.1); opacity: 0.9; }}
         .theme-icon {{ width: 20px; height: 20px; }}
         body.dark .sun, body:not(.dark) .moon {{ display: none; }}
         
@@ -112,7 +110,6 @@ def generate_index_html(latest_content):
         
         .grid {{ max-width: 900px; margin: 0 auto; padding: 0 20px 100px; display: grid; gap: 40px; }}
         
-        /* G3 Curve (Squircle) */
         .squircle {{ 
             border-radius: 42px; background: var(--card); border: 1px solid var(--border);
             padding: 45px; transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
@@ -123,13 +120,17 @@ def generate_index_html(latest_content):
         .news-card h3 {{ font-size: 32px; margin: 18px 0; font-weight: 700; letter-spacing: -0.02em; }}
         .news-card h3 a {{ color: inherit; text-decoration: none; display: flex; align-items: center; gap: 14px; }}
         .link-icon {{ width: 24px; height: 24px; opacity: 0.2; transition: 0.3s; }}
-        .news-card h3 a:hover .link-icon {{ opacity: 1; transform: translate(3px, -3px); }}
         .news-card p {{ font-size: 19px; color: var(--sub); line-height: 1.55; }}
         
         .status-pill {{ font-size: 11px; font-weight: 700; padding: 6px 14px; border-radius: 980px; background: #34c759; color: white; text-transform: uppercase; display: inline-block; }}
         
-        .archive-grid {{ display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 20px; margin-top: 40px; }}
-        .squircle-sm {{ border-radius: 20px; background: var(--card); padding: 25px; text-decoration: none; color: var(--text); font-weight: 600; text-align: center; border: 1px solid var(--border); transition: 0.3s; }}
+        .archive-grid {{ display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 20px; margin-top: 40px; }}
+        .archive-btn {{ 
+            border-radius: 20px; background: var(--card); padding: 25px; 
+            text-decoration: none; color: var(--text); font-weight: 600; 
+            text-align: center; border: 1px solid var(--border); transition: 0.3s; 
+        }}
+        .archive-btn:hover {{ background: var(--text); color: var(--bg); }}
     </style>
 </head>
 <body>
@@ -144,7 +145,7 @@ def generate_index_html(latest_content):
     <main class="grid">{cards_html}</main>
     <section style="max-width: 900px; margin: 0 auto 120px; padding: 0 20px;">
         <h2 style="font-size: 36px; font-weight: 800; letter-spacing: -0.03em;">Archive.</h2>
-        <div class="archive-grid">{archive_links}</div>
+        <div class="archive-grid">{archive_links_html}</div>
     </section>
     <script>
         function updateLogo(theme) {{
@@ -169,7 +170,7 @@ def generate_index_html(latest_content):
 
     with open("index.html", "w", encoding="utf-8") as f:
         f.write(full_html)
-    print("✅ Pro Dashboard generated.")
+    print("✅ Pro Dashboard generated with dynamic archive.")
 
 def fetch_and_save_news():
     prompt = "Search for top 5 AI/Tech stories from last 24h. Format: ### [Title](URL) \\n Summary: content \\n --- "
