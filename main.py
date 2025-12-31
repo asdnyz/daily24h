@@ -181,7 +181,14 @@ def generate_index_html(latest_content):
     print("✅ Nexus Neural Dashboard Online.")
 
 def fetch_and_save_news():
-    prompt = "Search for top 5 AI/Tech stories from last 24h. Format: ### [Title](URL) \\n Summary: content \\n --- "
+    prompt = "Role: Act as a professional content editor and research assistant. Search for top 5 AI/Tech stories from last 24h.
+Style: Use a Medium-style editorial tone—clear, insightful, and professional.
+Structure: Organize the layout like a Notion page using Markdown.
+Title: Every heading must begin with a relevant emoji.
+Use blockquotes (>) for key quotes or TLDR summaries.
+Use bolding to highlight essential terms or golden nuggets of information.
+Lists: Use clean bullet points for key takeaways and numbered lists for sequential steps.
+Content Goal: Focus on high-level synthesis rather than just listing facts. Make it look scannable yet deep. Format: ### [Title](URL) \\n Summary: content \\n --- "
     try:
         response = client.models.generate_content(
             model="gemini-2.0-flash-lite", 
