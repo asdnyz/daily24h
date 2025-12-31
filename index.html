@@ -1,78 +1,105 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nexus Intelligence Dashboard</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <title>Nexus Intelligence</title>
     <style>
-        :root { --primary: #2563eb; --bg: #f8fafc; --card: #ffffff; --text: #1e293b; --sub: #64748b; }
-        * { box-sizing: border-box; }
-        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); margin: 0; line-height: 1.6; }
-        .nav { background: #fff; border-bottom: 1px solid #e2e8f0; padding: 1rem 2rem; position: sticky; top: 0; z-index: 100; }
-        .nav-content { max-width: 1000px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
-        .logo { font-weight: 800; font-size: 1.5rem; color: #0f172a; letter-spacing: -0.03em; }
-        .status { display: flex; align-items: center; gap: 8px; font-size: 0.8rem; font-weight: 600; color: #22c55e; }
+        :root { --bg: #f8fafc; --card: #ffffff; --text: #1e293b; --sub: #64748b; --accent: #2563eb; --border: #e2e8f0; }
+        [data-theme="dark"] { --bg: #0f172a; --card: #1e293b; --text: #f1f5f9; --sub: #94a3b8; --border: #334155; }
+        
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: var(--bg); color: var(--text); margin: 0; transition: 0.3s; }
+        .nav { background: var(--card); border-bottom: 1px solid var(--border); padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; }
+        .logo { font-weight: 800; font-size: 1.4rem; letter-spacing: -0.04em; }
+        
+        #theme-toggle { cursor: pointer; padding: 6px 14px; border-radius: 20px; border: 1px solid var(--border); background: var(--bg); color: var(--text); font-size: 0.8rem; font-weight: 600; }
+        
+        .hero { max-width: 900px; margin: 40px auto; padding: 0 20px; }
+        .status { display: flex; align-items: center; gap: 8px; font-size: 0.8rem; font-weight: 700; color: #22c55e; margin-bottom: 10px; }
         .dot { height: 8px; width: 8px; background: #22c55e; border-radius: 50%; animation: pulse 2s infinite; }
         
-        .hero { max-width: 1000px; margin: 40px auto; padding: 0 20px; }
-        .hero h1 { font-size: 3rem; font-weight: 800; margin-bottom: 10px; color: #0f172a; letter-spacing: -0.04em; }
-        .hero p { color: var(--sub); font-size: 1.1rem; }
-
-        .grid { max-width: 1000px; margin: 0 auto 60px; padding: 0 20px; display: grid; gap: 24px; }
-        .news-card { background: var(--card); border: 1px solid #e2e8f0; border-radius: 16px; padding: 32px; transition: 0.3s; }
-        .news-card:hover { transform: translateY(-4px); box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); border-color: var(--primary); }
-        .news-card h3 { margin-top: 0; font-size: 1.4rem; }
-        .news-card h3 a { color: inherit; text-decoration: none; }
-        .news-card h3 a:hover { color: var(--primary); }
+        .grid { max-width: 900px; margin: 0 auto; padding: 0 20px 60px; display: grid; gap: 20px; }
+        .news-card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 25px; transition: 0.3s; }
+        .news-card:hover { transform: translateY(-4px); box-shadow: 0 12px 20px rgba(0,0,0,0.1); border-color: var(--accent); }
+        .news-card h3 { margin: 10px 0; font-size: 1.3rem; line-height: 1.3; }
+        .news-card a { color: var(--accent); text-decoration: none; }
+        .card-body { font-size: 1rem; color: var(--sub); line-height: 1.6; font-weight: 400; }
         
-        .archive { background: #f1f5f9; padding: 60px 20px; }
-        .archive-inner { max-width: 1000px; margin: 0 auto; }
-        .archive-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; margin-top: 20px; }
-        .archive-link { background: #fff; padding: 15px; border-radius: 10px; text-decoration: none; color: var(--text); font-weight: 600; text-align: center; border: 1px solid #e2e8f0; transition: 0.2s; }
-        .archive-link:hover { background: var(--primary); color: #fff; }
+        .sentiment-badge { font-size: 0.7rem; font-weight: 800; padding: 4px 10px; border-radius: 20px; text-transform: uppercase; }
+        .pos { background: #dcfce7; color: #166534; }
+        .neg { background: #fee2e2; color: #991b1b; }
+
+        .archive-box { background: var(--card); border-top: 1px solid var(--border); padding: 50px 20px; }
+        .archive-grid { max-width: 900px; margin: 20px auto 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; }
+        .archive-btn { background: var(--bg); border: 1px solid var(--border); padding: 10px; border-radius: 10px; text-align: center; text-decoration: none; color: var(--text); font-size: 0.85rem; font-weight: 600; }
+        .archive-btn:hover { background: var(--accent); color: #fff; }
 
         @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; } }
-        @media (max-width: 600px) { .hero h1 { font-size: 2rem; } }
     </style>
+    <script>
+        function toggleTheme() {
+            const html = document.documentElement;
+            const next = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            html.setAttribute('data-theme', next);
+            localStorage.setItem('theme', next);
+            document.getElementById('theme-toggle').innerText = next === 'dark' ? '☀️ LIGHT' : '🌙 DARK';
+        }
+        window.onload = () => {
+            const saved = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', saved);
+            document.getElementById('theme-toggle').innerText = saved === 'dark' ? '☀️ LIGHT' : '🌙 DARK';
+        };
+    </script>
 </head>
 <body>
     <nav class="nav">
-        <div class="nav-content">
-            <div class="logo">NEXUS</div>
-            <div class="status"><span class="dot"></span> SYSTEM LIVE</div>
-        </div>
+        <div class="logo">NEXUS INTELLIGENCE</div>
+        <button id="theme-toggle" onclick="toggleTheme()">🌙 DARK</button>
     </nav>
-    <header class="hero">
-        <h1>Intelligence Briefing</h1>
-        <p>Real-time AI News Aggregator • Updated 2025-12-31 12:48 UTC</p>
-    </header>
+    <div class="hero">
+        <div class="status"><span class="dot"></span> SYSTEM LIVE</div>
+        <h1 style="margin:0; font-size:2.5rem; letter-spacing:-0.04em;">Intelligence Briefing</h1>
+        <p style="color:var(--sub);">Updated: 2025-12-31 12:56 UTC</p>
+    </div>
     <main class="grid">
-        <div class="news-card"><h3>Disney Partners with OpenAI for Generative AI Integration
-Disney has announced a significant strategic partnership with OpenAI, making it the first major content owner to license its intellectual property for Sora, OpenAI's generative AI video platform. This collaboration allows Sora to create short videos using Disney characters and elements from its franchises, with select fan-inspired videos to be streamed on Disney+.</div>
-<div class="news-card"><h3>China Accelerates AI Development with Over 700 Generative AI Products
-China has seen rapid growth in its artificial intelligence sector, with over 700 generative AI large model products completing official filing procedures. This surge reflects advancements in AI, integrated circuits, and software, contributing to the nation's technological independence amidst global chip restrictions.</div>
-<div class="news-card"><h3>Nvidia Faces Demand for AI Chips Amidst Chinese Restrictions
-Despite Beijing's encouragement for domestic chip production, Chinese tech giants are still seeking Nvidia's advanced AI chips. Nvidia's H20 model has regained export approval, and the company is developing a more powerful B30A chip, highlighting the ongoing tension between global demand and China's regulatory landscape.</div>
-<div class="news-card"><h3>Memory Chip Demand Surges, Propelling Kioxia Holdings to Top Stock Performance
-The escalating demand for memory chips, driven by the AI boom, has led to unprecedented stock gains for Japanese memory chipmaker Kioxia Holdings. This surge underscores the critical role of memory in AI infrastructure and data centers, with Kioxia's shares outperforming global and domestic benchmarks.</div>
-<div class="news-card"><h3>Meta Acquires AI Startup Manus to Enhance AI Offerings
-Meta has purchased artificial intelligence startup Manus, signaling its continued commitment to expanding its AI capabilities across its platforms. This acquisition is part of Meta's broader strategy to bolster its AI offerings and remain competitive in the rapidly evolving AI landscape.</div>
-
-    </main>
-    <section class="archive">
-        <div class="archive-inner">
-            <h2>Historical Archives</h2>
-            <div class="archive-grid">
-                <a class="archive-link" href="briefings/2025-12-31.md">2025-12-31</a>
-
+            <div class="news-card">
+                <span class="sentiment-badge pos">Growth</span>
+                <h3>Texas Establishes AI Regulatory Council</h3>
+                <div class="card-body">[https://www.chron.com/news/article/Texas-set-to-create-a-council-to-monitor-certain-18637074.php](https://www.chron.com/news/article/Texas-set-to-create-a-council-to-monitor-certain-18637074.php)
+Summary: Texas is forming a 10-member advisory board to oversee AI use in state government, identify harmful practices, and recommend legislative updates. This move positions Texas alongside states like Colorado, Utah, and California in implementing AI regulatory frameworks.</div>
             </div>
+            <div class="news-card">
+                <span class="sentiment-badge pos">Growth</span>
+                <h3>OpenAI Releases GPT-5.2 with Advanced Capabilities</h3>
+                <div class="card-body">[https://openai.com/index/gpt-5-2-now-available/](https://openai.com/index/gpt-5-2-now-available/)
+Summary: OpenAI has launched GPT-5.2, its most advanced frontier model yet, designed for professional knowledge work and complex tasks. The new model demonstrates significant improvements in general intelligence, long-context understanding, and agentic tool-calling, outperforming previous models on various benchmarks.</div>
+            </div>
+            <div class="news-card">
+                <span class="sentiment-badge pos">Growth</span>
+                <h3>Meta Acquires Chinese-Founded AI Startup Manus for $2 Billion</h3>
+                <div class="card-body">[https://www.cbc.ca/news/technology/meta-acquires-manus-ai-1.7071821](https://www.cbc.ca/news/technology/meta-acquires-manus-ai-1.7071821)
+Summary: Meta has acquired Manus, a Singapore-based, Chinese-founded AI firm specializing in agentic AI for SMEs, for $2 billion. This acquisition aims to enhance Meta's existing platforms by improving their ability to answer questions and complete tasks with less user prompting.</div>
+            </div>
+            <div class="news-card">
+                <span class="sentiment-badge neg">Alert</span>
+                <h3>Mistral AI Secures €1.7 Billion in Series C Funding</h3>
+                <div class="card-body">[https://www.reuters.com/technology/mistral-ai-raises-17-billion-as-asml-becomes-its-top-shareholder-2025-12-24/](https://www.reuters.com/technology/mistral-ai-raises-17-billion-as-asml-becomes-its-top-shareholder-2025-12-24/)
+Summary: French AI startup Mistral AI has raised €1.7 billion in a Series C funding round, led by Dutch chipmaker ASML. This funding makes Mistral the most valuable AI startup in Europe and signifies Europe's growing efforts to compete with US AI giants.</div>
+            </div>
+            <div class="news-card">
+                <span class="sentiment-badge neg">Alert</span>
+                <h3>Generative AI Poised to Add Trillions to Global Economy</h3>
+                <div class="card-body">[https://www.mckinsey.com/capabilities/mckinsey-digital/our-insights/generative-ai-its-economic-potential-and-how-companies-can-adopt-it](https://www.mckinsey.com/capabilities/mckinsey-digital/our-insights/generative-ai-its-economic-potential-and-how-companies-can-adopt-it)
+Summary: Generative AI is projected to add $2.6 trillion to $4.4 trillion annually to the global economy across various use cases. This significant economic boost is expected to increase the impact of all artificial intelligence by 15 to 40 percent.</div>
+            </div></main>
+    <div class="archive-box">
+        <div style="max-width:900px; margin:0 auto;">
+            <h3 style="margin:0">📚 Historical Archive</h3>
+            <div class="archive-grid"><a class="archive-btn" href="briefings/2025-12-31.md">2025-12-31</a></div>
         </div>
-    </section>
-    <footer style="text-align: center; padding: 40px; color: var(--sub); font-size: 0.9rem;">
-        Engineered with Gemini 2.5 Flash-Lite & GitHub Actions
+    </div>
+    <footer style="text-align:center; padding:40px; color:var(--sub); font-size:0.8rem;">
+        Gemini 2.5 Flash-Lite • Neural Search via Google
     </footer>
 </body>
 </html>
