@@ -1,7 +1,0 @@
-settings:
-  bot_name: "Nexus Intelligence Dashboard"
-
-topics:
-  - id: "tech"
-    label: "Global Tech & AI"
-    query: "Artificial Intelligence and Technology"
