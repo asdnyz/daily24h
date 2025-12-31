@@ -18,13 +18,12 @@ def get_latest_briefing_content():
     list_of_files = glob.glob('briefings/*.md')
     if not list_of_files: return None
     latest_file = max(list_of_files, key=os.path.getmtime)
-    print(f"🔄 Fallback recovery: {latest_file}")
     with open(latest_file, "r", encoding="utf-8") as f:
         return f.read()
 
 def generate_index_html(latest_content):
-    """Generates the NIUS Terminal UI with your specific branding and Emoji support."""
-    print("🍏 Building NIUS Terminal UI...")
+    """Generates the NIUS Dashboard with Inter typography and unified weights."""
+    print("🍏 Building NIUS Inter UI...")
     
     sun_icon = '<svg class="theme-icon sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"></path></svg>'
     moon_icon = '<svg class="theme-icon moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path></svg>'
@@ -76,6 +75,9 @@ def generate_index_html(latest_content):
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>N.I.U.S. | Ultimate Source</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;800;900&display=swap" rel="stylesheet">
     <style>
         :root {{ 
             --bg: #f5f5f7; --card: #ffffff; --text: #000000; 
@@ -87,11 +89,13 @@ def generate_index_html(latest_content):
         }}
         
         body {{ 
-            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Helvetica Neue", sans-serif; 
+            font-family: 'Inter', -apple-system, sans-serif; 
             background: var(--bg); color: var(--text); margin: 0; 
             -webkit-font-smoothing: antialiased; 
+            letter-spacing: -0.01em;
         }}
 
+        /* Unified Static Nav */
         .nav {{ 
             position: fixed; top: 0; left: 0; right: 0; height: var(--nav-h);
             display: flex; align-items: center; justify-content: space-between;
@@ -100,14 +104,26 @@ def generate_index_html(latest_content):
             backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
         }}
         
+        .logo-container {{ display: flex; align-items: center; gap: 12px; }}
+
         .nav-center {{ 
             position: absolute; left: 50%; transform: translateX(-50%);
-            display: flex; align-items: center; gap: 12px; white-space: nowrap;
+            white-space: nowrap;
         }}
 
-        .logo-main, .logo-sub {{ font-weight: 900; font-size: 20px; letter-spacing: -0.05em; display: flex; align-items: center; gap: 8px; }}
-        .logo-sub {{ opacity: 0.4; font-size: 14px; }}
+        /* Typography Matching */
+        .logo-main, .logo-sub {{ 
+            font-weight: 900; 
+            font-size: 20px; 
+            letter-spacing: -0.05em; 
+            display: flex; 
+            align-items: center; 
+            gap: 8px; 
+        }}
+        .logo-main {{ text-transform: uppercase; }}
+        .logo-sub {{ opacity: 0.4; }}
 
+        /* Live Indicator */
         .pulse {{ width: 8px; height: 8px; background: #34c759; border-radius: 50%; animation: pulse 2s infinite; }}
         @keyframes pulse {{ 0% {{ box-shadow: 0 0 0 0 rgba(52, 199, 89, 0.7); }} 70% {{ box-shadow: 0 0 0 10px rgba(52, 199, 89, 0); }} 100% {{ box-shadow: 0 0 0 0 rgba(52, 199, 89, 0); }} }}
 
@@ -120,28 +136,30 @@ def generate_index_html(latest_content):
         body.dark .sun, body:not(.dark) .moon {{ display: none; }}
         
         .container {{ max-width: 900px; margin: 120px auto 100px; padding: 0 40px; display: grid; gap: 60px; }}
+        
+        /* G3 Squircle */
         .squircle {{ border-radius: 42px; background: var(--card); border: 1px solid var(--border); padding: 45px; }}
         
-        .news-card h3 {{ font-size: 34px; margin: 0 0 32px 0; font-weight: 800; line-height: 1.15; letter-spacing: -0.04em; }}
+        .news-card h3 {{ font-size: 34px; margin: 0 0 32px 0; font-weight: 800; line-height: 1.15; letter-spacing: -0.05em; }}
         .news-card h3 a {{ color: inherit; text-decoration: none; display: flex; align-items: center; gap: 14px; }}
         .link-icon {{ width: 24px; height: 24px; opacity: 0.2; }}
         
         .content-section {{ border-top: 1px solid var(--border); padding-top: 32px; }}
         .news-card ul {{ margin: 0; padding-left: 20px; color: var(--sub); list-style-type: square; }}
-        .news-card li {{ font-size: 19px; line-height: 1.6; margin-bottom: 16px; }}
+        .news-card li {{ font-size: 19px; line-height: 1.6; margin-bottom: 16px; font-weight: 400; }}
         b {{ color: var(--text); font-weight: 700; }}
         
         .archive-grid {{ display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; margin-top: 40px; }}
         .archive-btn {{ border-radius: 12px; background: var(--card); padding: 16px; text-decoration: none; color: var(--text); font-weight: 600; text-align: center; border: 1px solid var(--border); font-size: 14px; transition: 0.2s; }}
-        .archive-btn:hover {{ background: var(--text); color: var(--bg); }}
     </style>
 </head>
 <body>
     <nav class="nav">
-        <div style="opacity:0">Spacer</div>
+        <div class="logo-container">
+            <span class="logo-main"><div class="pulse"></div> N.I.U.S.</span>
+        </div>
         <div class="nav-center">
-            <span class="logo-main"><div class="pulse"></div> N.I.U.S. </span>
-            <span class="logo-sub">News.Intelligence.Ultimate.Source.</span>
+            <span class="logo-sub">news.intelligence.ultimate.source.</span>
         </div>
         <button id="theme-toggle" onclick="toggleTheme()">{sun_icon}{moon_icon}</button>
     </nav>
@@ -157,10 +175,10 @@ def generate_index_html(latest_content):
         function toggleTheme() {{
             const body = document.body;
             body.classList.toggle('dark');
-            localStorage.setItem('nius-terminal-v2', body.classList.contains('dark') ? 'dark' : 'light');
+            localStorage.setItem('nius-absolute-v2', body.classList.contains('dark') ? 'dark' : 'light');
         }}
         window.onload = () => {{
-            if (localStorage.getItem('nius-terminal-v2') === 'dark') document.body.classList.add('dark');
+            if (localStorage.getItem('nius-absolute-v2') === 'dark') document.body.classList.add('dark');
         }};
     </script>
 </body>
@@ -168,7 +186,7 @@ def generate_index_html(latest_content):
 
     with open("index.html", "w", encoding="utf-8") as f:
         f.write(full_html)
-    print("✅ Build Complete: NIUS Terminal (Fixed Emojis & Weights).")
+    print("✅ Build Complete: NIUS Absolute Inter.")
 
 def fetch_and_save_news():
     prompt = "Search for top 5 AI/Tech stories from last 24h. Use format: ### [Emoji] [Title](URL) \\n - bullet point with **bold keywords** \\n --- \\n YOU MUST INCLUDE AN EMOJI."
