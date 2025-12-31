@@ -12,14 +12,12 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Wipe Old Dashboard
+      - name: Clean Start
         run: |
-          # Remove index.html and index.md to prevent conflicts
-          rm -f index.html
-          rm -f index.md
-          # Create a fresh, empty index.html
+          # Deleting index.html and index.md manually before script runs
+          rm -f index.html index.md
           touch index.html
-          echo "🧹 Workspace cleaned. Fresh index.html initialized."
+          echo "🧹 Workspace wiped. Starting fresh UI build."
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -39,5 +37,5 @@ jobs:
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git add index.html briefings/*.md
-          git commit -m "Dashboard Refresh: $(date +'%Y-%m-%d')"
+          git commit -m "Dashboard Refresh: $(date +'%Y-%m-%d')" || echo "No changes"
           git push
