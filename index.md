@@ -1,5 +1,13 @@
 # Nexus Intelligence Platform - 2025-12-31
 
-> Automated Intelligence Briefing powered by Gemini 2.0
+### 📊 Daily Pulse Overview
 
----
+| Category | Sentiment | Impact |
+| :--- | :--- | :--- |
+| Global Tech & AI | ⚠️ Failed | - |
+| Halal Finance | ⚠️ Failed | - |
+| Space & Defense | ⚠️ Failed | - |
+
+
+
+*Last updated: 12:11:23 UTC*
