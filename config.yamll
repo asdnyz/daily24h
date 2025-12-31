@@ -1,0 +1,14 @@
+settings:
+  bot_name: "daily24 observer"
+  chart_theme: "dark"
+
+topics:
+  - id: "global_tech"
+    label: "Global Tech & AI"
+    query: "top news in artificial intelligence, LLMs, and big tech companies"
+  - id: "halal_finance"
+    label: "Halal Finance"
+    query: "shariah compliant investment news, halal fintech, and Islamic finance trends"
+  - id: "space_science"
+    label: "Space & Defense"
+    query: "SpaceX launches, aerospace technology, and satellite innovations"
