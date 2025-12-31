@@ -1,4 +1,5 @@
 remote_theme: pages-themes/minimal@v0.2.0
 title: Nexus Intelligence Dashboard
-description: Real-time AI Sentiment & Market Impact Analysis
-google_analytics: # (Optional: Add your GA code here later)
+description: Real-time AI News Aggregator powered by Gemini 2.0
+google_analytics: 
+show_downloads: false
