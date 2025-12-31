@@ -13,8 +13,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -33,6 +31,6 @@ jobs:
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git add -A
-          git commit -m "Update Daily Platform: $(date +'%Y-%m-%d')" || echo "No changes to commit"
+          git add .
+          git commit -m "Update Platform: $(date +'%Y-%m-%d')" || echo "No changes"
           git push
