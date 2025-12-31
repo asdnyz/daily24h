@@ -27,6 +27,7 @@ jobs:
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git add index.md briefings/*.json briefings/*.png
+          # The change is here: we add the whole briefings folder at once
+          git add index.md briefings/
           git commit -m "Update News Platform for $(date +'%Y-%m-%d')" || echo "No changes"
           git push
