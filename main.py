@@ -2,7 +2,6 @@ import os
 import sys
 import glob
 import re
-import time
 from datetime import datetime
 from google import genai
 from google.genai import types
@@ -15,17 +14,14 @@ except Exception as e:
     sys.exit(1)
 
 def get_latest_briefing_content():
-    """Fallback: Finds the newest briefing if the AI Scan fails."""
     list_of_files = glob.glob('briefings/*.md')
     if not list_of_files: return None
     latest_file = max(list_of_files, key=os.path.getmtime)
-    print(f"🔄 Fallback recovery: {latest_file}")
     with open(latest_file, "r", encoding="utf-8") as f:
         return f.read()
 
 def generate_index_html(latest_content):
-    """Generates the NIUS Cinematic UI with scroll-driven transitions."""
-    print("🍏 Building NIUS Cinematic Dashboard...")
+    print("🍏 Building NIUS Sequential Morph UI...")
     
     current_date = datetime.now().strftime("%b %d, %Y").upper()
     
@@ -33,60 +29,44 @@ def generate_index_html(latest_content):
     moon_icon = '<svg class="theme-icon moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path></svg>'
     link_icon = '<svg class="link-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>'
 
-    # --- 1. PARSE NEWS CARDS ---
+    # --- PARSE NEWS CARDS ---
     raw_stories = [s.strip() for s in latest_content.split('---') if s.strip()]
     cards_html = ""
     for story in raw_stories:
         lines = [l.strip() for l in story.split('\n') if l.strip()]
         if not lines: continue
-        
-        # Parse Title and Link (Clean stray markers)
         title_line = lines[0].replace('### ', '').replace('**', '').strip()
         title_text, url = title_line, "#"
         if '[' in title_line and '](' in title_line:
             title_text = title_line.split('[')[1].split(']')[0]
             url = title_line.split('](')[1].split(')')[0]
         
-        # Convert Body Bolding (** -> <b>)
         items_html = ""
         for line in lines[1:]:
             processed_line = re.sub(r'\*\*(.*?)\*\*', r'<b>\1</b>', line.strip())
             if processed_line.startswith('-') or processed_line.startswith('*'):
                 item_text = processed_line.lstrip('-* ').strip()
-                if item_text:
-                    items_html += f"<li>{item_text}</li>"
+                items_html += f"<li>{item_text}</li>"
         
         cards_html += f"""
         <div class="news-card squircle">
             <h3><a href="{url}" target="_blank">{title_text} {link_icon}</a></h3>
-            <div class="content-section">
-                <ul>{items_html}</ul>
-            </div>
+            <div class="content-section"><ul>{items_html}</ul></div>
         </div>"""
 
-    # --- 2. GENERATE ARCHIVE LINKS ---
-    archive_links_html = ""
-    if os.path.exists("briefings"):
-        files = sorted(os.listdir("briefings"), reverse=True)
-        for f in files[:12]:
-            if f.endswith(".md"):
-                date_label = f.replace(".md", "")
-                archive_links_html += f'<a class="archive-btn" href="briefings/{f}">{date_label}</a>'
-
-    # --- 3. ASSEMBLE FULL HTML ---
     full_html = f"""<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NIUS | Ultimate Source</title>
+    <title>N.I.U.S. | Ultimate Source</title>
     <style>
         :root {{ 
-            --bg: #f5f5f7; --card: #ffffff; --text: #1d1d1f; 
+            --bg: #f5f5f7; --card: #ffffff; --text: #000000; 
             --sub: #86868b; --border: rgba(0,0,0,0.08); --nav-h: 72px;
         }}
         body.dark {{ 
-            --bg: #000000; --card: #1c1c1e; --text: #f5f5f7; 
+            --bg: #000000; --card: #1c1c1e; --text: #ffffff; 
             --sub: #86868b; --border: rgba(255,255,255,0.1); 
         }}
         
@@ -94,31 +74,29 @@ def generate_index_html(latest_content):
             font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif; 
             background: var(--bg); color: var(--text); margin: 0; 
             transition: background 0.4s ease; -webkit-font-smoothing: antialiased; 
-            overflow-x: hidden;
         }}
 
-        /* Sticky Cinematic Nav */
+        /* Navigation */
         .nav {{ 
             position: fixed; top: 0; left: 0; right: 0; height: var(--nav-h);
             display: flex; align-items: center; justify-content: space-between;
-            padding: 0 40px; z-index: 2000; transition: 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-            background: transparent;
+            padding: 0 40px; z-index: 2000; background: transparent; transition: 0.3s;
         }}
         .nav.scrolled {{
-            background: var(--card); backdrop-filter: blur(30px) saturate(180%);
-            -webkit-backdrop-filter: blur(30px) saturate(180%);
-            border-bottom: 0.5px solid var(--border);
+            background: var(--bg); backdrop-filter: blur(20px); border-bottom: 0.5px solid var(--border);
         }}
         
-        .nav-date {{ font-size: 11px; font-weight: 800; letter-spacing: 0.1em; opacity: 0; transition: 0.3s; color: var(--sub); }}
-        .nav-date.visible {{ opacity: 1; }}
-        
-        .nav-logo {{ 
-            position: absolute; left: 50%; transform: translateX(-50%);
-            font-weight: 900; font-size: 22px; letter-spacing: -0.05em;
-            opacity: 0; transition: 0.3s;
+        /* Unified Logo & Date Style */
+        .nav-date, .nav-logo {{ 
+            font-weight: 900; font-size: 22px; letter-spacing: -0.05em; 
+            opacity: 0; transition: 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            transform: translateY(10px);
         }}
-        .nav-logo.visible {{ opacity: 1; }}
+        .nav-logo {{ position: absolute; left: 50%; transform: translateX(-50%) translateY(10px); }}
+        .nav-date {{ font-size: 16px; letter-spacing: -0.02em; opacity: 0; }}
+
+        .visible {{ opacity: 1 !important; transform: translateY(0) !important; }}
+        .visible-date {{ opacity: 0.4 !important; transform: translateY(0) !important; }}
 
         #theme-toggle {{ 
             cursor: pointer; width: 42px; height: 42px; border-radius: 50%; 
@@ -128,50 +106,38 @@ def generate_index_html(latest_content):
         .theme-icon {{ width: 18px; height: 18px; }}
         body.dark .sun, body:not(.dark) .moon {{ display: none; }}
         
-        /* Hero Setup */
-        .hero {{ max-width: 900px; margin: 180px auto 100px; padding: 0 40px; }}
-        .hero h1 {{ 
-            font-size: clamp(48px, 10vw, 110px); font-weight: 900; line-height: 0.9; 
-            letter-spacing: -0.06em; margin: 0; transition: 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        /* Sequential Hero Title */
+        .hero {{ max-width: 900px; margin: 200px auto 100px; padding: 0 40px; }}
+        .hero-word {{ 
+            display: block; font-size: 110px; font-weight: 900; line-height: 0.85; 
+            letter-spacing: -0.07em; transition: 0.4s;
         }}
-        .hero h1 span {{ display: block; }}
         
         .grid {{ max-width: 900px; margin: 0 auto; padding: 0 40px 100px; display: grid; gap: 60px; }}
-        
-        /* G3 Squircles */
-        .squircle {{ 
-            border-radius: 42px; background: var(--card); border: 1px solid var(--border);
-            padding: 45px; transition: 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-        }}
-        
+        .squircle {{ border-radius: 42px; background: var(--card); border: 1px solid var(--border); padding: 45px; }}
         .news-card h3 {{ font-size: 36px; margin: 0 0 32px 0; font-weight: 800; line-height: 1.1; letter-spacing: -0.04em; }}
         .news-card h3 a {{ color: inherit; text-decoration: none; display: flex; align-items: center; gap: 14px; }}
-        .link-icon {{ width: 26px; height: 26px; opacity: 0.2; }}
-        
         .content-section {{ border-top: 1px solid var(--border); padding-top: 32px; }}
         .news-card ul {{ margin: 0; padding-left: 20px; color: var(--sub); list-style-type: square; }}
         .news-card li {{ font-size: 20px; line-height: 1.6; margin-bottom: 16px; }}
         b {{ color: var(--text); font-weight: 700; }}
         
         .archive-grid {{ display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; margin-top: 40px; }}
-        .archive-btn {{ border-radius: 12px; background: var(--card); padding: 16px; text-decoration: none; color: var(--text); font-weight: 600; text-align: center; border: 1px solid var(--border); font-size: 14px; transition: 0.2s; }}
-        .archive-btn:hover {{ background: var(--text); color: var(--bg); }}
+        .archive-btn {{ border-radius: 12px; background: var(--card); padding: 16px; text-decoration: none; color: var(--text); font-weight: 600; text-align: center; border: 1px solid var(--border); transition: 0.2s; }}
     </style>
 </head>
 <body>
     <nav id="navbar" class="nav">
         <div id="date-display" class="nav-date">{current_date}</div>
-        <div id="logo-display" class="nav-logo">NIUS</div>
+        <div id="logo-display" class="nav-logo">n.i.u.s.</div>
         <button id="theme-toggle" onclick="toggleTheme()">{sun_icon}{moon_icon}</button>
     </nav>
 
     <div class="hero">
-        <h1 id="hero-title">
-            <span>nexus.</span>
-            <span>intelligence.</span>
-            <span>ultimate.</span>
-            <span>source.</span>
-        </h1>
+        <span class="hero-word" id="w1">nexus.</span>
+        <span class="hero-word" id="w2">intelligence.</span>
+        <span class="hero-word" id="w3">ultimate.</span>
+        <span class="hero-word" id="w4">source.</span>
     </div>
 
     <main class="grid">{cards_html}</main>
@@ -186,33 +152,40 @@ def generate_index_html(latest_content):
             const navbar = document.getElementById('navbar');
             const dateDisplay = document.getElementById('date-display');
             const logoDisplay = document.getElementById('logo-display');
-            const heroTitle = document.getElementById('hero-title');
+            const words = [document.getElementById('w1'), document.getElementById('w2'), document.getElementById('w3'), document.getElementById('w4')];
             const scrollPos = window.scrollY;
 
-            if (scrollPos > 150) {{
+            // Individual word staggering
+            words.forEach((word, index) => {{
+                const trigger = 50 + (index * 60);
+                if (scrollPos > trigger) {{
+                    word.style.opacity = '0';
+                    word.style.transform = 'translateY(-30px)';
+                }} else {{
+                    word.style.opacity = '1';
+                    word.style.transform = 'translateY(0)';
+                }}
+            }});
+
+            // Nav Activation
+            if (scrollPos > 280) {{
                 navbar.classList.add('scrolled');
-                dateDisplay.classList.add('visible');
+                dateDisplay.classList.add('visible-date');
                 logoDisplay.classList.add('visible');
-                heroTitle.style.opacity = '0';
-                heroTitle.style.transform = 'translateY(-20px) scale(0.95)';
             }} else {{
                 navbar.classList.remove('scrolled');
-                dateDisplay.classList.remove('visible');
+                dateDisplay.classList.remove('visible-date');
                 logoDisplay.classList.remove('visible');
-                heroTitle.style.opacity = '1';
-                heroTitle.style.transform = 'translateY(0) scale(1)';
             }}
         }});
 
         function toggleTheme() {{
             const body = document.body;
             body.classList.toggle('dark');
-            const theme = body.classList.contains('dark') ? 'dark' : 'light';
-            localStorage.setItem('nius-theme-v5', theme);
+            localStorage.setItem('nius-v6', body.classList.contains('dark') ? 'dark' : 'light');
         }}
         window.onload = () => {{
-            const saved = localStorage.getItem('nius-theme-v5') || 'light';
-            if (saved === 'dark') document.body.classList.add('dark');
+            if (localStorage.getItem('nius-v6') === 'dark') document.body.classList.add('dark');
         }};
     </script>
 </body>
