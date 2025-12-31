@@ -112,8 +112,8 @@ def generate_index_html(latest_content):
             white-space: nowrap;
         }}
 
-        .logo-main {{ font-weight: 900; font-size: 20px; letter-spacing: -0.05em; display: flex; align-items: center; gap: 8px; }}
-        .logo-sub {{ font-weight: 500; font-size: 14px; opacity: 0.4; letter-spacing: -0.02em; }}
+        .logo-main {{ font-weight: 900; font-size: 20px; letter-spacing: -0.05em; display: flex; align-items: left; gap: 8px; }}
+        .logo-sub {{ font-weight: 900; font-size: 20px; letter-spacing: -0.05em; display: flex; align-items: center; gap: 8px; }}
 
         /* Live Indicator */
         .pulse {{ width: 8px; height: 8px; background: #34c759; border-radius: 50%; box-shadow: 0 0 0 rgba(52, 199, 89, 0.4); animation: pulse 2s infinite; }}
@@ -148,9 +148,8 @@ def generate_index_html(latest_content):
 </head>
 <body>
     <nav class="nav">
-        <div class="nav-date" style="opacity:0">Placeholder</div>
         <div class="nav-center">
-            <span class="logo-main"><div class="pulse"></div> N.I.U.S.</span>
+            <span class="logo-main"><div class="pulse"></div> N.I.U.S. </span>
             <span class="logo-sub">News.Intelligence.Ultimate.Source.</span>
         </div>
         <button id="theme-toggle" onclick="toggleTheme()">{sun_icon}{moon_icon}</button>
