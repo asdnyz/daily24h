@@ -13,21 +13,26 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.10'
+
       - name: Install dependencies
         run: pip install google-genai pyyaml pandas matplotlib requests
+
       - name: Run Pipeline
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: python main.py
-      - name: Commit Changes
+
+      - name: Commit and Push Changes
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          # The change is here: we add the whole briefings folder at once
-          git add index.md briefings/
-          git commit -m "Update News Platform for $(date +'%Y-%m-%d')" || echo "No changes"
+          git add -A
+          git commit -m "Update Daily Platform: $(date +'%Y-%m-%d')" || echo "No changes to commit"
           git push
