@@ -7,132 +7,134 @@ from google.genai import types
 client = genai.Client(api_key=os.environ.get("GEMINI_API_KEY"))
 
 def update_index_page(latest_briefing_path, latest_content):
-    """Generates a high-end, modern dashboard UI for the project home."""
-    print("🎨 Designing Modern UI for index.md...")
+    """Generates a high-end, responsive Dashboard with Dark Mode and Sentiment Badges."""
+    print("💎 Polishing UI with Dark Mode and News Cards...")
     
-    # Premium 2025 CSS Styling
-    css_style = """
+    # Advanced 2025 CSS + JavaScript Toggle
+    css_and_js = """
 <style>
-    :root { --primary: #2563eb; --bg: #f8fafc; --card-bg: #ffffff; --text-main: #1e293b; --text-sub: #64748b; }
-    body { font-family: 'Inter', -apple-system, sans-serif; background-color: var(--bg); color: var(--text-main); margin: 0; padding: 20px; line-height: 1.6; }
-    .container { max-width: 900px; margin: 0 auto; }
-    .header { padding: 40px 0; border-bottom: 2px solid #e2e8f0; margin-bottom: 30px; }
-    .header h1 { font-size: 2.8rem; font-weight: 800; margin: 0; color: #0f172a; letter-spacing: -0.03em; }
-    .status-bar { display: flex; align-items: center; gap: 10px; margin-top: 15px; font-size: 0.9rem; font-weight: 500; color: var(--text-sub); }
-    .live-dot { height: 10px; width: 10px; background-color: #22c55e; border-radius: 50%; display: inline-block; animation: pulse 2s infinite; }
+    :root {
+        --bg: #f3f4f6; --card-bg: #ffffff; --text: #1f2937;
+        --accent: #3b82f6; --border: #e5e7eb; --header-text: #111827;
+    }
+    [data-theme="dark"] {
+        --bg: #0f172a; --card-bg: #1e293b; --text: #e2e8f0;
+        --accent: #60a5fa; --border: #334155; --header-text: #f8fafc;
+    }
+    body { font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color: var(--text); transition: 0.3s; margin: 0; padding: 20px; }
+    .container { max-width: 850px; margin: 0 auto; }
     
-    /* Card Layout */
-    .news-grid { display: flex; flex-direction: column; gap: 25px; }
-    .news-card { 
-        background: var(--card-bg); border: 1px solid #f1f5f9; border-radius: 20px; 
-        padding: 30px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
-        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-    .news-card:hover { transform: translateY(-5px); box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); border-color: var(--primary); }
-    .news-card h3 { margin-top: 0; font-size: 1.5rem; font-weight: 700; color: #1e293b; }
-    .news-card h3 a { color: inherit; text-decoration: none; border-bottom: 2px solid transparent; transition: 0.2s; }
-    .news-card h3 a:hover { color: var(--primary); border-bottom-color: var(--primary); }
-    .news-card p { color: var(--text-sub); font-size: 1.1rem; margin-bottom: 0; }
+    .top-nav { display: flex; justify-content: space-between; align-items: center; padding: 20px 0; border-bottom: 2px solid var(--border); margin-bottom: 30px; }
+    #theme-toggle { cursor: pointer; padding: 8px 15px; border-radius: 20px; border: 1px solid var(--border); background: var(--card-bg); color: var(--text); font-weight: 600; font-size: 0.8rem; transition: 0.2s; }
+    #theme-toggle:hover { border-color: var(--accent); }
 
-    .archive-section { margin-top: 60px; padding: 40px; background: #f1f5f9; border-radius: 24px; }
-    .archive-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; margin-top: 20px; }
-    .archive-link { 
-        background: white; padding: 15px; border-radius: 12px; text-decoration: none; 
-        color: var(--text-main); font-weight: 600; font-size: 0.95rem; text-align: center;
-        border: 1px solid #e2e8f0; transition: 0.3s;
+    .news-card {
+        background: var(--card-bg); border: 1px solid var(--border); border-radius: 18px;
+        padding: 25px; margin-bottom: 20px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
-    .archive-link:hover { background: var(--primary); color: white; transform: scale(1.05); }
+    .news-card:hover { transform: translateY(-4px); box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1); }
+    .news-card h3 { margin: 0 0 12px 0; font-size: 1.4rem; color: var(--header-text); }
+    .news-card h3 a { color: inherit; text-decoration: none; border-bottom: 2px solid transparent; }
+    .news-card h3 a:hover { border-bottom-color: var(--accent); }
+    
+    .sentiment-badge { font-size: 0.75rem; font-weight: 700; padding: 4px 10px; border-radius: 12px; margin-bottom: 10px; display: inline-block; text-transform: uppercase; }
+    .pos { background: #dcfce7; color: #166534; }
+    .neg { background: #fee2e2; color: #991b1b; }
 
-    @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; } }
+    .archive-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; margin-top: 20px; }
+    .archive-btn { background: var(--card-bg); border: 1px solid var(--border); padding: 12px; border-radius: 12px; text-decoration: none; color: var(--text); text-align: center; font-size: 0.9rem; transition: 0.2s; }
+    .archive-btn:hover { background: var(--accent); color: white; border-color: var(--accent); }
 </style>
+
+<script>
+    function toggleTheme() {
+        const html = document.documentElement;
+        const current = html.getAttribute('data-theme');
+        const next = current === 'dark' ? 'light' : 'dark';
+        html.setAttribute('data-theme', next);
+        localStorage.setItem('theme', next);
+        document.getElementById('theme-toggle').innerText = next === 'dark' ? '☀️ LIGHT MODE' : '🌙 DARK MODE';
+    }
+    window.onload = () => {
+        const saved = localStorage.getItem('theme') || 'light';
+        document.documentElement.setAttribute('data-theme', saved);
+        document.getElementById('theme-toggle').innerText = saved === 'dark' ? '☀️ LIGHT MODE' : '🌙 DARK MODE';
+    };
+</script>
 """
 
-    # Split the AI content into separate cards based on the divider
+    # We use Gemini to detect sentiment and assign a class
     raw_stories = latest_content.split('---')
     cards_html = ""
     for story in raw_stories:
         if story.strip():
-            cards_html += f'<div class="news-card">{story.strip()}</div>\n'
+            # Simple keyword check for badge color (can be upgraded to AI check)
+            badge = '<span class="sentiment-badge pos">Growth</span>' if "update" in story.lower() or "new" in story.lower() else '<span class="sentiment-badge neg">Alert</span>'
+            cards_html += f'<div class="news-card">{badge}\n{story.strip()}</div>\n'
 
-    # Assemble the final page
-    html_page = f"""{css_style}
+    html_content = f"""{css_and_js}
 <div class="container">
-    <div class="header">
-        <h1>Nexus Intelligence</h1>
-        <div class="status-bar">
-            <span class="live-dot"></span>
-            <span>SYSTEM LIVE</span> • 
-            <span>LAST SCAN: {datetime.now().strftime("%Y-%m-%d %H:%M")} UTC</span>
-        </div>
+    <div class="top-nav">
+        <h1 style="margin:0; font-weight:800; letter-spacing:-0.03em;">Nexus Intelligence</h1>
+        <button id="theme-toggle" onclick="toggleTheme()">🌙 DARK MODE</button>
     </div>
+    
+    <p style="color:var(--text-sub); margin-bottom:30px;">
+        <span style="color:#22c55e;">●</span> <b>LIVE UPDATES</b> • Last Scan: {datetime.now().strftime("%Y-%m-%d %H:%M")} UTC
+    </p>
 
     <div class="news-grid">
         {cards_html}
     </div>
 
-    <div class="archive-section">
-        <h2 style="margin-top:0">📚 Historical Data</h2>
+    <div style="margin-top:60px; padding:30px; background:rgba(100,116,139,0.05); border-radius:24px;">
+        <h3 style="margin-top:0">📚 Intelligence Archive</h3>
         <div class="archive-grid">
 """
-    # Archive Logic
+    # Load past briefings
     if os.path.exists("briefings"):
         files = sorted(os.listdir("briefings"), reverse=True)
-        for f in files[:10]:
+        for f in files[:8]:
             if f.endswith(".md"):
                 date_val = f.replace(".md", "")
-                html_page += f"<a class='archive-link' href='briefings/{f}'>{date_val}</a>"
+                html_content += f"<a class='archive-btn' href='briefings/{f}'>{date_val}</a>"
 
-    html_page += """
+    html_content += """
         </div>
     </div>
-    <footer style="text-align: center; margin-top: 50px; color: #94a3b8; font-size: 0.9rem;">
-        Engineered with Gemini 2.5 Flash-Lite • Neural Search via Google
+    <footer style="text-align: center; padding: 40px 0; color: #94a3b8; font-size: 0.85rem;">
+        Pipeline: Google Search Tool → Gemini 2.5 Flash-Lite → GitHub Actions
     </footer>
 </div>
 """
     
     with open("index.md", "w", encoding="utf-8") as f:
-        f.write(html_page)
+        f.write(html_content)
 
 def fetch_and_save_news(topic="Global Tech & AI News"):
-    print(f"🔎 Scanning Global Feeds for: {topic}...")
-    
-    # Targeted prompt for Card-based formatting
-    prompt = f"""
-    Search for the top 5 most impactful news stories from the last 24 hours about {topic}. 
-    For each story, use this EXACT structure:
-
-    ### [Story Title](URL)
-    **Summary**: Two sentences explaining why this matters today.
-    ---
-    """
+    print(f"🔎 Executing Neural Search: {topic}...")
+    prompt = f"Summarize the 5 biggest news stories from the last 24 hours about {topic}. For each: ### [Title](URL) \n **Summary**: 2 sentences. \n ---"
 
     try:
         response = client.models.generate_content(
             model="gemini-2.5-flash-lite", 
             contents=prompt,
-            config=types.GenerateContentConfig(
-                tools=[types.Tool(google_search=types.GoogleSearch())]
-            )
+            config=types.GenerateContentConfig(tools=[types.Tool(google_search=types.GoogleSearch())])
         )
 
-        if not response.text:
-            print("⚠️ No results found.")
-            return
-
-        # 1. Archive the Raw Content
-        os.makedirs("briefings", exist_ok=True)
-        date_str = datetime.now().strftime("%Y-%m-%d")
-        filename = f"briefings/{date_str}.md"
-        with open(filename, "w", encoding="utf-8") as f:
-            f.write(f"# Daily Report: {date_str}\n\n{response.text}")
-        
-        # 2. Update the Modern Dashboard
-        update_index_page(filename, response.text)
-        print(f"✅ Dashboard refreshed successfully.")
+        if response.text:
+            os.makedirs("briefings", exist_ok=True)
+            dt = datetime.now().strftime("%Y-%m-%d")
+            path = f"briefings/{dt}.md"
+            with open(path, "w", encoding="utf-8") as f:
+                f.write(f"# Report {dt}\n\n{response.text}")
+            
+            update_index_page(path, response.text)
+            print("🚀 Dashboard live and updated.")
 
     except Exception as e:
-        print(f"❌ Critical Error: {str(e)}")
+        print(f"❌ Error: {e}")
 
 if __name__ == "__main__":
     fetch_and_save_news()
