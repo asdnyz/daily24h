@@ -98,7 +98,7 @@ def generate_index_html(latest_content):
 def fetch_and_save_news():
     prompt = "Top 5 AI/Tech stories from last 24h. Format: ### [Title](URL) \\n Summary: content \\n --- "
     response = client.models.generate_content(
-        model="gemini-2.0-flash-lite", 
+        model="gemini-2.0-flash", 
         contents=prompt,
         config=types.GenerateContentConfig(tools=[types.Tool(google_search=types.GoogleSearch())])
     )
