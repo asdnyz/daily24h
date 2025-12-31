@@ -11,21 +11,33 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+
+      - name: Wipe Old Dashboard
+        run: |
+          # Remove index.html and index.md to prevent conflicts
+          rm -f index.html
+          rm -f index.md
+          # Create a fresh, empty index.html
+          touch index.html
+          echo "🧹 Workspace cleaned. Fresh index.html initialized."
+
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.10'
+
       - name: Install dependencies
         run: pip install google-genai
+
       - name: Run Python script
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: python main.py
+
       - name: Commit and Push changes
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          # Track index.html even if it's new
-          git add index.html briefings/*.md || true
-          git commit -m "Dashboard Refresh: $(date +'%Y-%m-%d')" || echo "No changes to commit"
+          git add index.html briefings/*.md
+          git commit -m "Dashboard Refresh: $(date +'%Y-%m-%d')"
           git push
