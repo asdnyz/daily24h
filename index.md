@@ -1,13 +1,20 @@
 # Nexus Intelligence Platform - 2025-12-31
 
-### 📊 Daily Pulse Overview
+> Automated Daily News Briefing | Verified via Google Search
 
-| Category | Sentiment | Impact |
-| :--- | :--- | :--- |
-| Global Tech & AI | ⚠️ Failed | - |
-| Halal Finance | ⚠️ Failed | - |
-| Space & Defense | ⚠️ Failed | - |
+---
+## Global Tech & AI
+⚠️ Could not retrieve news for Global Tech & AI at this time.
+
+---
+## Halal Finance
+⚠️ Could not retrieve news for Halal Finance at this time.
+
+---
+## Space & Defense
+⚠️ Could not retrieve news for Space & Defense at this time.
+
+---
 
 
-
-*Last updated: 12:11:23 UTC*
+*Last updated: 12:16:21 UTC*
