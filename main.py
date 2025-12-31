@@ -5,30 +5,17 @@ from datetime import datetime
 from google import genai
 from google.genai import types
 
-# 1. Initialize API Client
+# 1. Initialize Client
 client = genai.Client(api_key=os.environ.get("GEMINI_API_KEY"))
 
-# 2. Load Topics
+# 2. Load Config
 with open("config.yaml", "r") as f:
     config = yaml.safe_load(f)
 
 def fetch_structured_news(topic):
-    print(f"📡 Analyzing: {topic['label']}...")
-    prompt = f"""
-    Summarize the top 3 news stories for {topic['label']} from the last 24 hours.
-    Search Query: {topic['query']}
+    print(f"📡 Processing: {topic['label']}...")
+    prompt = f"Summarize top 3 news for {topic['label']} from last 24h. Search: {topic['query']}. Return JSON with 'markdown', 'avg_sentiment' (float -1 to 1), and 'avg_impact' (int 1-10)."
     
-    For each story, analyze:
-    1. Sentiment: (-1.0 to 1.0)
-    2. Market Impact: (1 to 10)
-    
-    Return ONLY a JSON object:
-    {{
-      "markdown": "## [Title](url)\\nSummary here...",
-      "avg_sentiment": 0.5,
-      "avg_impact": 7
-    }}
-    """
     try:
         response = client.models.generate_content(
             model="gemini-2.0-flash-lite",
@@ -40,55 +27,57 @@ def fetch_structured_news(topic):
         )
         return json.loads(response.text)
     except Exception as e:
-        print(f"⚠️ Error with {topic['label']}: {e}")
+        print(f"⚠️ AI Error for {topic['label']}: {e}")
         return None
 
 def main():
     date_str = datetime.now().strftime("%Y-%m-%d")
-    
-    # Header for the Daily Paper
     master_report = f"# {config['settings']['bot_name']} - {date_str}\n\n"
-    master_report += "> Automated Intelligence Briefing powered by Gemini 2.0\n\n---\n"
+    master_report += "### 📊 Daily Pulse Overview\n\n| Category | Sentiment | Impact |\n| :--- | :--- | :--- |\n"
     
+    category_details = ""
     history_records = []
     
-    for topic in config['topics']:
+    topics = config.get('topics', [])
+    if not topics:
+        master_report += "| No topics configured | - | - |\n\n"
+    
+    for topic in topics:
         data = fetch_structured_news(topic)
         if data:
-            # Add the text summary
-            master_report += f"### {topic['label']}\n"
-            master_report += f"**Pulse:** Sentiment {data.get('avg_sentiment')} | Impact {data.get('avg_impact')}/10\n\n"
-            master_report += f"{data.get('markdown')}\n\n"
+            # Add to Summary Table
+            master_report += f"| {topic['label']} | {data.get('avg_sentiment', 0)} | {data.get('avg_impact', 0)}/10 |\n"
             
-            # Store the data point for history
+            # Add to Detail Section
+            category_details += f"## {topic['label']}\n{data.get('markdown', 'No summary available.')}\n\n---\n"
+            
             history_records.append({
-                "date": date_str,
-                "topic": topic['label'],
-                "sentiment": data.get('avg_sentiment'),
-                "impact": data.get('avg_impact')
+                "date": date_str, "topic": topic['label'],
+                "sentiment": data.get('avg_sentiment'), "impact": data.get('avg_impact')
             })
+        else:
+            master_report += f"| {topic['label']} | ⚠️ Failed | - |\n"
 
-    # 1. Save the main website file
+    master_report += "\n" + category_details
+    master_report += f"\n\n*Last updated: {datetime.now().strftime('%H:%M:%S')} UTC*"
+
+    # Save outputs
     with open("index.md", "w", encoding="utf-8") as f:
         f.write(master_report)
     
-    # 2. Update the JSON history archive
     os.makedirs("briefings", exist_ok=True)
     hist_file = "briefings/history.json"
     existing_data = []
     if os.path.exists(hist_file):
         with open(hist_file, "r") as f:
-            try:
-                existing_data = json.load(f)
-            except:
-                existing_data = []
+            try: existing_data = json.load(f)
+            except: pass
     
     existing_data.extend(history_records)
-    # Keep only the last 100 entries to save space
     with open(hist_file, "w") as f:
         json.dump(existing_data[-100:], f)
     
-    print(f"✅ Successfully updated index.md and history.json for {date_str}")
+    print(f"✅ Deployment complete for {date_str}")
 
 if __name__ == "__main__":
     main()
